@@ -477,5 +477,11 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 packet.WriteGuid("Guid3", guid3[i]);
             }
         }
+
+        [Parser(Opcode.CMSG_LOG_STREAMING_ERROR)]
+        public static void HandleLogStreamingError(Packet packet)
+        {
+            packet.ReadWoWString("Error", packet.ReadBits(9));
+        }
     }
 }

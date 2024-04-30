@@ -203,6 +203,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             ReadMovementMonsterSpline(packet, pos, "MovementMonsterSpline");
         }
 
+        [HasSniffData]
         [Parser(Opcode.SMSG_PHASE_SHIFT_CHANGE)]
         public static void HandlePhaseShift(Packet packet)
         {
@@ -221,11 +222,12 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
                 if (Settings.UseDBC && DBC.Phase.ContainsKey(id))
                 {
-                    packet.WriteLine($"[{i}] ID: {id} ({StoreGetters.GetName(StoreNameType.PhaseId, id, false)}) Flags: {(DBCPhaseFlags)DBC.Phase[id].Flags}");
+                    packet.WriteLine($"[{i}] ID: {id} ({StoreGetters.GetName(StoreNameType.Phase, id, false)}) Flags: {(DBCPhaseFlags)DBC.Phase[id].Flags}");
                 }
                 else
                     packet.AddValue($"ID", id, i);
 
+                packet.AddSniffData(StoreNameType.Phase, id, "PHASE_SHIFT_CHANGE");
                 CoreParsers.MovementHandler.ActivePhases.Add(id, true);
             }
 

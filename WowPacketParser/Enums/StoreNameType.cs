@@ -4,36 +4,43 @@ namespace WowPacketParser.Enums
 {
     public enum StoreNameType
     {
-        None                = 1,
-        Spell               = 2,
-        Map                 = 3,
-        LFGDungeon          = 4,
-        Battleground        = 5,
-        Unit                = 6,
-        GameObject          = 7,
-        CreatureDifficulty  = 8,
-        Item                = 9,
-        Quest               = 10,
-        Opcode              = 11, // Packet
-        PageText            = 12,
-        NpcText             = 13,
-        BroadcastText       = 14,
-        Gossip              = 15,
-        Zone                = 16,
-        Area                = 17,
-        AreaTrigger         = 18,
-        Phase               = 19,
-        Player              = 20,
-        Achievement         = 21,
-        CreatureFamily      = 22,
-        Criteria            = 23,
-        Currency            = 24,
-        Difficulty          = 25,
-        Faction             = 26,
-        QuestGreeting       = 27,
-        QuestObjective      = 28,
-        Sound               = 29,
-        PhaseId             = 30,
+        None = 1,
+        Achievement,
+        Area,
+        AreaTrigger,
+        Battleground,
+        Conversation,
+        CreatureFamily,
+        Criteria,
+        Currency,
+        Difficulty,
+        Faction,
+        GameObject,
+        Gossip,
+        Item,
+        LFGDungeon,
+        Map,
+        NpcText,
+        Opcode, // Packet
+        PageText,
+        Phase,
+        Player,
+        Quest,
+        QuestGreeting,
+        QuestObjective,
+        Sound,
+        Spell,
+        Unit,
+        Zone,
+        PlayerChoice,
+        Vignette,
+        ConversationLine,
+        SpellLabel,
+        GarrMission,
+        MapChallengeMode,
+        JournalEncounter,
+        DungeonEncounter,
+        MawPower,
     }
 
     public static class StoreName
@@ -75,7 +82,7 @@ namespace WowPacketParser.Enums
             if (typeof(T) == typeof(ZoneId))
                 return StoreNameType.Zone;
             if (typeof(T) == typeof(PhaseId))
-                return StoreNameType.PhaseId;
+                return StoreNameType.Phase;
 
             throw new ArgumentOutOfRangeException(typeof(T).ToString());
         }

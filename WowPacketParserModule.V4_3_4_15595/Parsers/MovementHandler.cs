@@ -2711,6 +2711,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             packet.WriteGuid("Guid", guid);
         }
 
+        [HasSniffData]
         [Parser(Opcode.SMSG_PHASE_SHIFT_CHANGE)]
         public static void HandlePhaseShift434(Packet packet)
         {
@@ -2743,6 +2744,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                 var id = packet.ReadUInt16("Id", i);
                 phaseShift.Phases.Add(id);
                 CoreParsers.MovementHandler.ActivePhases.Add(id, true);
+                packet.AddSniffData(StoreNameType.Phase, id, "PHASE_SHIFT_CHANGE");
             }
 
             if (DBC.Phases.Any())

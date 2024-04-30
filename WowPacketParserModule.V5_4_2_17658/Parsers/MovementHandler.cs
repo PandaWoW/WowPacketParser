@@ -187,7 +187,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
             var splineCount = (int)packet.ReadBits(20);
             var bit98 = packet.ReadBit();
-            var splineType = (int)packet.ReadBits(3);
+            var splineType = (int)packet.ReadBits("Facing", 3);
 
             if (splineType == 3)
                 packet.StartBitStream(factingTargetGUID, 0, 7, 3, 4, 5, 6, 1, 2);
@@ -887,6 +887,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             packet.AddValue("Position", pos);
         }
 
+        [HasSniffData]
         [Parser(Opcode.SMSG_PHASE_SHIFT_CHANGE)]
         public static void HandlePhaseShift(Packet packet)
         {
@@ -912,7 +913,6 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
             packet.ParseBitStream(guid, 3);
 
-
             count = packet.ReadUInt32() / 2;
             packet.AddValue("Phases count", count);
             for (var i = 0; i < count; ++i)
@@ -920,6 +920,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                 var phaseId = packet.ReadUInt16("Phase id", i);
                 phaseShift.Phases.Add(phaseId);
                 CoreParsers.MovementHandler.ActivePhases.Add(phaseId, true); // Phase.dbc
+                packet.AddSniffData(StoreNameType.Phase, phaseId, "PHASE_SHIFT_CHANGE");
             }
 
             packet.ParseBitStream(guid, 7, 0);

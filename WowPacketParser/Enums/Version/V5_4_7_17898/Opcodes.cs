@@ -123,6 +123,7 @@ namespace WowPacketParser.Enums.Version.V5_4_7_17898
             {Opcode.CMSG_LOGOUT_CANCEL, 0x11D4},
             {Opcode.CMSG_LOGOUT_REQUEST, 0x0476},
             {Opcode.CMSG_LOG_DISCONNECT, 0x1A13},
+            {Opcode.CMSG_LOG_STREAMING_ERROR, 0x1A12},
             {Opcode.CMSG_LOOT_UNIT, 0x1E52},
             {Opcode.CMSG_SET_LOOT_METHOD, 0x1C10},
             {Opcode.CMSG_LOOT_MONEY, 0x15A0},

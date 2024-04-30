@@ -231,6 +231,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             monsterMove.Position = pos;
         }
 
+        [HasSniffData]
         [Parser(Opcode.SMSG_PHASE_SHIFT_CHANGE)]
         public static void HandlePhaseShift(Packet packet)
         {
@@ -251,6 +252,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
                 var phaseId = packet.ReadUInt16("Phase id", i);
                 phaseShift.Phases.Add(phaseId);
                 CoreParsers.MovementHandler.ActivePhases.Add(phaseId, true); // Phase.dbc
+                packet.AddSniffData(StoreNameType.Phase, phaseId, "PHASE_SHIFT_CHANGE");
             }
 
             count = packet.ReadUInt32() / 2;

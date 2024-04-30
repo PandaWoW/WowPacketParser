@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using WowPacketParser.Enums;
 using WowPacketParser.Hotfix;
 using WowPacketParser.Misc;
@@ -54,7 +55,8 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             creature.Type = packet.ReadInt32E<CreatureType>("Type");
 
             var name = new string[4];
-            var femaleName = new string[4];
+            var femaleName = Enumerable.Repeat(string.Empty, 4).ToArray();
+
             for (int i = 0; i < 4; ++i)
             {
                 if (stringLens[i][0] > 1)
@@ -62,6 +64,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                 if (stringLens[i][1] > 1)
                     femaleName[i] = packet.ReadCString("Female Name", i);
             }
+
             creature.Name = name[0];
             creature.FemaleName = femaleName[0];
 

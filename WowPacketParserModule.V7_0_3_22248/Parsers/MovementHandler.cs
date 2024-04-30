@@ -438,6 +438,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadInt32("VehicleRecID");
         }
 
+        [HasSniffData]
         [Parser(Opcode.SMSG_PHASE_SHIFT_CHANGE)]
         public static void HandlePhaseShift(Packet packet)
         {
@@ -463,6 +464,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 else
                     packet.AddValue("ID", id, i);
 
+                packet.AddSniffData(StoreNameType.Phase, id, "PHASE_SHIFT_CHANGE");
                 CoreParsers.MovementHandler.ActivePhases.Add(id, true);
             }
 

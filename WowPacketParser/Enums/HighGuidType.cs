@@ -233,6 +233,7 @@ namespace WowPacketParser.Enums
         Transport     = 0xF02,
         Unit          = 0xF03,
         Pet           = 0xF04,
-        Vehicle       = 0xF05
+        Vehicle       = 0xF05,
+        AreaTrigger   = 0xF0B
     }
 }
