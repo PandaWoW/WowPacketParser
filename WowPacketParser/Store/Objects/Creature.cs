@@ -64,22 +64,31 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("currentwaypoint")]
         public uint? CurrentWaypoint;
 
-        [DBFieldName("curhealth")]
+        [DBFieldName("curhealth", TargetedDatabaseFlag.TillShadowlands)]
         public uint? CurHealth;
 
-        [DBFieldName("curmana")]
+        [DBFieldName("curHealthPct", TargetedDatabaseFlag.Dragonflight | TargetedDatabaseFlag.WotlkClassic)]
+        public uint? CurHealthPct;
+
+        [DBFieldName("curmana", TargetedDatabaseFlag.TillShadowlands)]
         public uint? CurMana;
 
         [DBFieldName("MovementType")]
         public uint? MovementType;
 
-        [DBFieldName("npcflag")]
+        [DBFieldName("npcflag", false, false, true)]
         public uint? NpcFlag;
 
-        [DBFieldName("unit_flags")]
-        public uint? UnitFlag;
+        [DBFieldName("unit_flags", false, false, true)]
+        public uint? UnitFlags;
 
-        [DBFieldName("dynamicflags")]
+        [DBFieldName("unit_flags2", false, false, true)]
+        public uint? UnitFlags2;
+
+        [DBFieldName("unit_flags3", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.AnyClassic, false, false, true)]
+        public uint? UnitFlags3;
+
+        [DBFieldName("dynamicflags", TargetedDatabaseFlag.TillShadowlands | TargetedDatabaseFlag.AnyClassic)]
         public uint? DynamicFlag;
 
         [DBFieldName("VerifiedBuild")]

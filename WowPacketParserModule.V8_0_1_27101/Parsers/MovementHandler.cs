@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using WowPacketParser.DBC;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
@@ -112,9 +114,14 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             }
 
             Vector3 endpos = new Vector3();
+
+            double overallDist = 0.0f;
             for (int i = 0; i < pointsCount; i++)
             {
                 var spot = packet.ReadVector3();
+
+                // euclidean distance
+                overallDist += Math.Sqrt(Math.Pow(spot.X - pos.X, 2) + Math.Pow(spot.Y - pos.Y, 2) + Math.Pow(spot.Z - pos.Z, 2));
 
                 // client always taking first point
                 if (i == 0)
@@ -177,13 +184,18 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 monsterMove.PackedPoints.Add(vec);
                 packet.AddValue("WayPoints", vec, indexes, i);
             }
+
+            float moveTimeInSec = (float)monsterMove.MoveTime / 1000;
+            float speedXY = (float)overallDist / moveTimeInSec;
+            packet.AddValue("CalculatedSpeedXY", speedXY, indexes);
         }
 
         public static void ReadMovementMonsterSpline(Packet packet, Vector3 pos, params object[] indexes)
         {
             PacketMonsterMove monsterMove = packet.Holder.MonsterMove;
             monsterMove.Id = packet.ReadUInt32("Id", indexes);
-            monsterMove.Destination = packet.ReadVector3("Destination", indexes);
+            if (ClientVersion.RemovedInVersion(ClientBranch.Retail, ClientVersionBuild.V10_2_0_52038) || ClientVersion.Branch != ClientBranch.Retail)
+                monsterMove.Destination = packet.ReadVector3("Destination", indexes);
 
             packet.ResetBitReader();
 
@@ -216,7 +228,11 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             phaseShift.PersonalGuid = packet.ReadPackedGuid128("PersonalGUID");
             for (var i = 0; i < count; ++i)
             {
-                var flags = packet.ReadUInt16E<PhaseFlags>("PhaseFlags", i);
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_2_0_52038))
+                    packet.ReadUInt32E<PhaseFlags>("PhaseFlags", i);
+                else
+                    packet.ReadUInt16E<PhaseFlags>("PhaseFlags", i);
+
                 var id = packet.ReadUInt16();
                 phaseShift.Phases.Add(id);
 

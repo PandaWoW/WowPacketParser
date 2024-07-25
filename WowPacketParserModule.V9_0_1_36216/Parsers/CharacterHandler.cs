@@ -30,6 +30,15 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadInt32("BlockReason", idx);
         }
 
+        public static void ReadCustomTabardInfo(Packet packet, params object[] idx)
+        {
+            packet.ReadInt32("EmblemStyle", idx);
+            packet.ReadInt32("EmblemColor", idx);
+            packet.ReadInt32("BorderStyle", idx);
+            packet.ReadInt32("BorderColor", idx);
+            packet.ReadInt32("BackgroundColor", idx);
+        }
+
         public static void ReadCharactersListEntry(Packet packet, params object[] idx)
         {
             var playerGuid = packet.ReadPackedGuid128("Guid", idx);
@@ -70,6 +79,12 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             var mailSenderTypes = ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_2_36639) ? new uint[packet.ReadUInt32()] : Array.Empty<uint>();
             packet.ReadUInt32("OverrideSelectScreenFileDataID", idx);
 
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_2_0_52038))
+                ReadCustomTabardInfo(packet, idx, "PersonalTabard");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_2_7_54577))
+                packet.ReadInt32("TimerunningSeasonID");
+
             for (var j = 0u; j < customizationCount; ++j)
                 ReadChrCustomizationChoice(packet, idx, "Customizations", j);
 
@@ -82,6 +97,12 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             var firstLogin = packet.ReadBit("FirstLogin", idx);
             packet.ReadBit("BoostInProgress", idx);
             packet.ReadBits("UnkWod61x", 5, idx);
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_1_5_50232))
+            {
+                packet.ReadBit("RpeResetAvailable", idx);
+                packet.ReadBit("RpeResetQuestClearAvailable", idx);
+            }
 
             for (var j = 0; j < mailSenderLengths.Length; ++j)
                 mailSenderLengths[j] = packet.ReadBits(6);
@@ -168,7 +189,8 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                 packet.ReadBit("IsTrialAccountRestricted");
 
             var hasDisabledClassesMask = packet.ReadBit("HasDisabledClassesMask");
-            packet.ReadBit("IsAlliedRacesCreationAllowed");
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V10_2_0_52038))
+                packet.ReadBit("IsAlliedRacesCreationAllowed");
 
             var charsCount = packet.ReadUInt32("CharactersCount");
             packet.ReadInt32("MaxCharacterLevel");
@@ -241,12 +263,17 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             var hasTemplateSet = packet.ReadBit("HasTemplateSet");
             packet.ReadBit("IsTrialBoost");
             packet.ReadBit("UseNPE");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_2_6_53840))
+                packet.ReadBit("Unused1026");
 
             packet.ReadByteE<Race>("RaceID");
             packet.ReadByteE<Class>("ClassID");
             packet.ReadByteE<Gender>("SexID");
 
             var customizationCount = packet.ReadUInt32();
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_2_7_54577))
+                packet.ReadInt32("TimerunningSeasonID");
 
             packet.ReadWoWString("Name", nameLen);
 
@@ -296,7 +323,9 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             var customizationsCount = packet.ReadUInt32("CustomizationsCount");
             packet.ReadByte("NewSexID");
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_0_2_46479))
-                packet.ReadByteE<Race>("CustomizedRace");
+                packet.ReadInt32E<Race>("CustomizedRace");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_1_5_50232))
+                packet.ReadInt32("CustomizedChrModelID");
             for (var i = 0; i < customizationsCount; i++)
                 ReadChrCustomizationChoice(packet, "Customizations", i);
         }

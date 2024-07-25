@@ -1,6 +1,7 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V10_0_0_46181.Parsers
 {
@@ -39,6 +40,10 @@ namespace WowPacketParserModule.V10_0_0_46181.Parsers
 
             packet.ReadBit("Pushed");
             packet.ReadBit("Created");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_1_7_51187))
+                packet.ReadBit("ReadBit_1017");
+
             packet.ReadBits("DisplayText", 3);
             packet.ReadBit("IsBonusRoll");
             packet.ReadBit("IsEncounterLoot");
@@ -59,6 +64,35 @@ namespace WowPacketParserModule.V10_0_0_46181.Parsers
         public static void HandleLootMoney(Packet packet)
         {
             packet.ReadBit("IsSoftInteract");
+        }
+
+        [Parser(Opcode.SMSG_SELL_RESPONSE, ClientVersionBuild.V10_1_7_51187)]
+        public static void HandleSellResponse(Packet packet)
+        {
+            packet.ReadPackedGuid128("VendorGUID");
+            var itemGuidCount = packet.ReadUInt32("ItemGuidCount");
+
+            packet.ReadInt32E<SellResult>("Reason");
+
+            for (var i = 0; i < itemGuidCount; ++i)
+                packet.ReadPackedGuid128("ItemGuid", i);
+        }
+
+        [Parser(Opcode.CMSG_CHANGE_BAG_SLOT_FLAG)]
+        [Parser(Opcode.CMSG_CHANGE_BANK_BAG_SLOT_FLAG)]
+        public static void HandleChangeBagSlotFlag(Packet packet)
+        {
+            packet.ReadUInt32("BagIndex");
+            packet.ReadUInt32E<BagSlotFlags>("BagSlotFlag");
+            packet.ReadBit("On");
+        }
+
+        [Parser(Opcode.CMSG_SET_BACKPACK_AUTOSORT_DISABLED)]
+        [Parser(Opcode.CMSG_SET_BACKPACK_SELL_JUNK_DISABLED)]
+        [Parser(Opcode.CMSG_SET_BANK_AUTOSORT_DISABLED)]
+        public static void HandleBackpackAutosortDisabled(Packet packet)
+        {
+            packet.ReadBit("Disable");
         }
     }
 }

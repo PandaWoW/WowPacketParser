@@ -4,6 +4,13 @@ namespace WowPacketParser.Proto.Processing
 {
     public abstract class PacketProcessor<T> : IPacketProcessor<T>
     {
+        protected ulong GameBuild { get; private set; }
+        
+        public virtual void Initialize(ulong gameBuild)
+        {
+            GameBuild = gameBuild;
+        }
+
         public virtual T? Process(PacketHolder packet)
         {
             switch (packet.KindCase)
@@ -98,6 +105,8 @@ namespace WowPacketParser.Proto.Processing
                     return Process(packet.BaseData, packet.LoginSetTimeSpeed);
                 case PacketHolder.KindOneofCase.AuraUpdateAll:
                     return Process(packet.BaseData, packet.AuraUpdateAll);
+                case PacketHolder.KindOneofCase.AiReaction:
+                    return Process(packet.BaseData, packet.AiReaction);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -147,5 +156,6 @@ namespace WowPacketParser.Proto.Processing
         protected virtual T? Process(PacketBase basePacket, PacketSpellFailure packet) => default;
         protected virtual T? Process(PacketBase basePacket, PacketLoginSetTimeSpeed packet) => default;
         protected virtual T? Process(PacketBase basePacket, PacketAuraUpdateAll packet) => default;
+        protected virtual T? Process(PacketBase basePacket, PacketAIReaction packet) => default;
     }
 }

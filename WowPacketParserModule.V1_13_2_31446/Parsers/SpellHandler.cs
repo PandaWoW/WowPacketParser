@@ -36,12 +36,12 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             packet.ReadPackedGuid128("Item", idx);
 
             if (hasSrcLoc)
-                V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, "SrcLocation");
+                V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, idx, "SrcLocation");
 
             Vector3? dstLocation = null;
             if (hasDstLoc)
             {
-                dstLocation = V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, "DstLocation");
+                dstLocation = V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, idx, "DstLocation");
                 if (packetSpellData != null)
                     packetSpellData.DstLocation = dstLocation;
             }
@@ -154,15 +154,17 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
         [Parser(Opcode.SMSG_SPELL_START)]
         public static void HandleSpellStart(Packet packet)
         {
-            PacketSpellStart packetSpellStart = packet.Holder.SpellStart = new();
+            PacketSpellStart packetSpellStart = new();
             packetSpellStart.Data = ReadSpellCastData(packet, "Cast");
+            packet.Holder.SpellStart = packetSpellStart;
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]
         public static void HandleSpellGo(Packet packet)
         {
-            PacketSpellGo packetSpellGo = packet.Holder.SpellGo = new();
+            PacketSpellGo packetSpellGo = new();
             packetSpellGo.Data = ReadSpellCastData(packet, "Cast");
+            packet.Holder.SpellGo = packetSpellGo;
 
             packet.ResetBitReader();
 

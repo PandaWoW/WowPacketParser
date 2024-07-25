@@ -6,6 +6,19 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 {
     public static class BattlegroundHandler
     {
+        [Parser(Opcode.CMSG_BATTLEMASTER_JOIN, ClientVersionBuild.V8_1_5_29683)]
+        public static void HandleBattlemasterJoin(Packet packet)
+        {
+            var queueCount = packet.ReadInt32();
+            packet.ReadByte("Roles");
+
+            for (int i = 0; i < 2; i++)
+                packet.ReadInt32("BlacklistMap", i);
+
+            for (int i = 0; i < queueCount; i++)
+                V6_0_2_19033.Parsers.BattlegroundHandler.ReadPackedBattlegroundQueueTypeID(packet);
+        }
+
         [Parser(Opcode.CMSG_BATTLEMASTER_JOIN_ARENA)]
         public static void HandleBattlemasterJoinArena(Packet packet)
         {
@@ -21,7 +34,10 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadUInt32("HealingDone", idx);
             var statsCount = packet.ReadUInt32("StatsCount", idx);
             packet.ReadInt32("PrimaryTalentTree", idx);
-            packet.ReadInt32E<Gender>("Sex", idx);
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_1_5_50232))
+                packet.ReadByteE<Gender>("Sex", idx);
+            else
+                packet.ReadInt32E<Gender>("Sex", idx);
             packet.ReadInt32E<Race>("Race", idx);
             packet.ReadInt32E<Class>("Class", idx);
             packet.ReadInt32("CreatureID", idx);

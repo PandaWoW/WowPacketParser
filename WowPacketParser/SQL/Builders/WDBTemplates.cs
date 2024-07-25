@@ -85,24 +85,12 @@ namespace WowPacketParser.SQL.Builders
 
             if (!Storage.CreatureTemplates.IsEmpty() && Settings.TargetedDatabase != TargetedDatabase.Classic)
             {
-                foreach (var creatureTemplate in Storage.CreatureTemplates)
-                {
-                    if (creatureTemplate.Value.Item1.FemaleName == null)
-                        creatureTemplate.Value.Item1.FemaleName = string.Empty;
-                }
-
                 var templatesDb = SQLDatabase.Get(Storage.CreatureTemplates.Values);
                 return SQLUtil.Compare(Storage.CreatureTemplates.Values, templatesDb, StoreNameType.Unit);
             }
 
             if (!Storage.CreatureTemplatesClassic.IsEmpty() && Settings.TargetedDatabase == TargetedDatabase.Classic)
             {
-                foreach (var creatureTemplate in Storage.CreatureTemplatesClassic)
-                {
-                    if (creatureTemplate.Item1.FemaleName == null)
-                        creatureTemplate.Item1.FemaleName = string.Empty;
-                }
-
                 var templatesDb = SQLDatabase.Get(Storage.CreatureTemplatesClassic);
                 return SQLUtil.Compare(Storage.CreatureTemplatesClassic, templatesDb, StoreNameType.Unit);
             }
@@ -142,6 +130,25 @@ namespace WowPacketParser.SQL.Builders
             var templatesDb = SQLDatabase.Get(Storage.CreatureTemplateQuestItems);
 
             return SQLUtil.Compare(Storage.CreatureTemplateQuestItems, templatesDb, StoreNameType.Unit);
+        }
+
+        [BuilderMethod(true)]
+        public static string CreatureTemplateQuestCurrencies()
+        {
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_template))
+                return string.Empty;
+
+            if (Storage.CreatureTemplateQuestCurrencies.IsEmpty())
+                return string.Empty;
+
+            var templatesDb = SQLDatabase.Get(Storage.CreatureTemplateQuestCurrencies);
+
+            return SQLUtil.Compare(Settings.SQLOrderByKey ? Storage.CreatureTemplateQuestCurrencies.OrderBy(x => x.Item1.CreatureId).ThenBy(y => y.Item1.CurrencyId) : Storage.CreatureTemplateQuestCurrencies, templatesDb, x =>
+            {
+                string creatureName = StoreGetters.GetName(StoreNameType.Unit, (int)x.CreatureId, false);
+                string currencyName = StoreGetters.GetName(StoreNameType.Currency, (int)x.CurrencyId, false);
+                return $"{creatureName} - {currencyName}";
+            });
         }
 
         [BuilderMethod(true, Gameobjects = true)]

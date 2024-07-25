@@ -26,8 +26,12 @@ namespace WowPacketParserModule.V10_0_0_46181.Parsers
                 var hasTotalEarned = packet.ReadBit();
                 var hasHasNextRechargeTime = packet.ReadBit();
                 var hasRechargeCycleStartTime = false;
+                var hasOverflownCurrencyID = false;
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_1_0_49407))
                     hasRechargeCycleStartTime = packet.ReadBit();
+
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_2_0_52038))
+                    hasOverflownCurrencyID = packet.ReadBit();
 
                 packet.ReadBits("Flags", 5, i);
 
@@ -51,6 +55,9 @@ namespace WowPacketParserModule.V10_0_0_46181.Parsers
 
                 if (hasRechargeCycleStartTime)
                     packet.ReadTime64("RechargeCycleStartTime", i);
+
+                if (hasOverflownCurrencyID)
+                    packet.ReadInt32("OverflownCurrencyID", i);
             }
         }
 
@@ -107,6 +114,50 @@ namespace WowPacketParserModule.V10_0_0_46181.Parsers
 
             if (hasRechargeCycleStartTime)
                 packet.ReadTime64("RechargeCycleStartTime");
+        }
+
+        [Parser(Opcode.SMSG_DISPLAY_TOAST)]
+        public static void HandleDisplayToast(Packet packet)
+        {
+            packet.ReadUInt64("Quantity");
+
+            packet.ReadByte("DisplayToastMethod");
+            packet.ReadUInt32("QuestID");
+
+            packet.ResetBitReader();
+
+            packet.ReadBit("Mailed");
+            var type = packet.ReadBits("Type", 2);
+            packet.ReadBit("IsSecondaryResult");
+
+            if (type == 0)
+            {
+                packet.ReadBit("BonusRoll");
+                Substructures.ItemHandler.ReadItemInstance(packet);
+                packet.ReadInt32("LootSpec");
+                packet.ReadSByte("Gender");
+                packet.ReadInt32("ItemQuantity?");
+            }
+
+            if (type == 1)
+                packet.ReadUInt32("CurrencyID");
+        }
+
+        [Parser(Opcode.SMSG_START_TIMER)]
+        public static void HandleStartTimer(Packet packet)
+        {
+            packet.ReadInt64("TotalTime");
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V10_2_7_54577))
+                packet.ReadInt64("TimeLeft");
+            packet.ReadUInt32E<TimerType>("Type");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V10_2_7_54577))
+            {
+                packet.ReadInt64("TimeLeft");
+                var hasPlayerGUID = packet.ReadBit("HasPlayerGUID");
+                if (hasPlayerGUID)
+                    packet.ReadPackedGuid128("PlayerGUID");
+            }
         }
     }
 }

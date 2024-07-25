@@ -9,7 +9,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint? Entry;
 
-        [DBFieldName("path_id")]
+        [DBFieldName("path_id", TargetedDatabaseFlag.TillShadowlands)]
+        [DBFieldName("PathId", TargetedDatabaseFlag.SinceDragonflight)]
         public uint? PathID;
 
         [DBFieldName("mount")]
@@ -33,18 +34,18 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("emote")]
         public uint? Emote;
 
-        [DBFieldName("aiAnimKit", TargetedDatabaseFlag.SinceLegion)]
+        [DBFieldName("aiAnimKit", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.WotlkClassic)]
         public ushort? AIAnimKit;
 
-        [DBFieldName("movementAnimKit", TargetedDatabaseFlag.SinceLegion)]
+        [DBFieldName("movementAnimKit", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.WotlkClassic)]
         public ushort? MovementAnimKit;
 
-        [DBFieldName("meleeAnimKit", TargetedDatabaseFlag.SinceLegion)]
+        [DBFieldName("meleeAnimKit", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.WotlkClassic)]
         public ushort? MeleeAnimKit;
 
         // visibilityDistanceType exists in all database versions but because UnitFlags2 to detect the value from sniff doesn't exist in earlier client version
         // we pretend the field doesn't exist
-        [DBFieldName("visibilityDistanceType", TargetedDatabaseFlag.SinceWarlordsOfDraenor)]
+        [DBFieldName("visibilityDistanceType", TargetedDatabaseFlag.SinceWarlordsOfDraenor | TargetedDatabaseFlag.WotlkClassic)]
         public byte? VisibilityDistanceType;
 
         [DBFieldName("auras")]

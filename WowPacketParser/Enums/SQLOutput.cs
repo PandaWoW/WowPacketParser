@@ -3,6 +3,7 @@
     public enum SQLOutput
     {
         // ReSharper disable InconsistentNaming
+        areatrigger,
         areatrigger_create_properties,
         areatrigger_create_properties_orbit,
         areatrigger_create_properties_polygon_vertex,
@@ -26,6 +27,7 @@
         creature_template_gossip,
         creature_template_locale,
         creature_text,
+        creature_spell_list,
         gameobject,
         gameobject_addon,
         gameobject_queststarter,

@@ -5,7 +5,7 @@ namespace WowPacketParser.Store.Objects
 {
     [Hotfix]
     [DBTableName("tact_key")]
-    public sealed record TactKeyHotfix1000: IDataModel
+    public sealed record TactKeyHotfix : IDataModel
     {
         [DBFieldName("ID", true)]
         public uint? ID;

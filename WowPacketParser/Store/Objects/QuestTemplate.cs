@@ -16,10 +16,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("QuestLevel", TargetedDatabaseFlag.TillBattleForAzeroth | TargetedDatabaseFlag.AnyClassic)]
         public int? QuestLevel;
 
-        [DBFieldName("ScalingFactionGroup", TargetedDatabaseFlag.BattleForAzeroth | TargetedDatabaseFlag.AnyClassic)]
+        [DBFieldName("ScalingFactionGroup", TargetedDatabaseFlag.BattleForAzeroth | TargetedDatabaseFlag.Classic)]
+        [DBFieldName("QuestScalingFactionGroup", TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic)]
         public int? QuestScalingFactionGroup;
 
-        [DBFieldName("MaxScalingLevel", TargetedDatabaseFlag.Legion | TargetedDatabaseFlag.BattleForAzeroth | TargetedDatabaseFlag.AnyClassic)]
+        [DBFieldName("MaxScalingLevel", TargetedDatabaseFlag.Legion | TargetedDatabaseFlag.BattleForAzeroth | TargetedDatabaseFlag.Classic)]
+        [DBFieldName("QuestMaxScalingLevel", TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic)]
         public int? QuestMaxScalingLevel;
 
         [DBFieldName("QuestPackageID", TargetedDatabaseFlag.SinceWarlordsOfDraenor | TargetedDatabaseFlag.AnyClassic)]
@@ -250,7 +252,7 @@ namespace WowPacketParser.Store.Objects
         public uint? AreaGroupID;
 
         [DBFieldName("TimeAllowed")]
-        public uint? TimeAllowed;
+        public long? TimeAllowed;
 
         [DBFieldName("AllowableRaces", TargetedDatabaseFlag.TillCataclysm)]
         public RaceMask? AllowableRaces;
@@ -265,10 +267,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Expansion", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.AnyClassic)]
         public int? Expansion;
 
-        [DBFieldName("ManagedWorldStateID", TargetedDatabaseFlag.SinceBattleForAzeroth)]
+        [DBFieldName("ManagedWorldStateID", TargetedDatabaseFlag.SinceBattleForAzeroth | TargetedDatabaseFlag.WotlkClassic)]
         public int? ManagedWorldStateID;
 
-        [DBFieldName("QuestSessionBonus", TargetedDatabaseFlag.SinceBattleForAzeroth)]
+        [DBFieldName("QuestSessionBonus", TargetedDatabaseFlag.SinceBattleForAzeroth | TargetedDatabaseFlag.WotlkClassic)]
         public int? QuestSessionBonus;
 
         [DBFieldName("LogTitle", LocaleConstant.enUS)]
@@ -322,19 +324,19 @@ namespace WowPacketParser.Store.Objects
         public uint?[] RequiredCurrencyCount;
 
         [DBFieldName("QuestGiverTextWindow", TargetedDatabaseFlag.Cataclysm)]
-        [DBFieldName("PortraitGiverText", TargetedDatabaseFlag.SinceWarlordsOfDraenor, LocaleConstant.enUS)]
+        [DBFieldName("PortraitGiverText", TargetedDatabaseFlag.SinceWarlordsOfDraenor | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic, LocaleConstant.enUS)]
         public string QuestGiverTextWindow;
 
         [DBFieldName("QuestGiverTargetName", TargetedDatabaseFlag.Cataclysm)]
-        [DBFieldName("PortraitGiverName", TargetedDatabaseFlag.SinceWarlordsOfDraenor, LocaleConstant.enUS)]
+        [DBFieldName("PortraitGiverName", TargetedDatabaseFlag.SinceWarlordsOfDraenor | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic, LocaleConstant.enUS)]
         public string QuestGiverTargetName;
 
         [DBFieldName("QuestTurnTextWindow", TargetedDatabaseFlag.Cataclysm)]
-        [DBFieldName("PortraitTurnInText", TargetedDatabaseFlag.SinceWarlordsOfDraenor, LocaleConstant.enUS)]
+        [DBFieldName("PortraitTurnInText", TargetedDatabaseFlag.SinceWarlordsOfDraenor | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic, LocaleConstant.enUS)]
         public string QuestTurnTextWindow;
 
         [DBFieldName("QuestTurnTargetName", TargetedDatabaseFlag.Cataclysm)]
-        [DBFieldName("PortraitTurnInName", TargetedDatabaseFlag.SinceWarlordsOfDraenor, LocaleConstant.enUS)]
+        [DBFieldName("PortraitTurnInName", TargetedDatabaseFlag.SinceWarlordsOfDraenor | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic, LocaleConstant.enUS)]
         public string QuestTurnTargetName;
 
         [DBFieldName("SoundAccept", TargetedDatabaseFlag.Cataclysm)]
