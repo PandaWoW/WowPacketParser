@@ -85,6 +85,29 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             return gossipMessageOption;
         }
 
+        public static GossipQuestOption ReadGossipQuestTextData(Packet packet, params object[] idx)
+        {
+            var gossipQuest = new GossipQuestOption();
+            gossipQuest.QuestId = (uint)packet.ReadInt32("QuestID", idx);
+            packet.ReadInt32("ContentTuningID", idx);
+            packet.ReadInt32("QuestType", idx);
+            packet.ReadInt32("QuestLevel", idx);
+            packet.ReadInt32("QuestMaxScalingLevel", idx);
+
+            for (int j = 0; j < 2; ++j)
+                packet.ReadInt32("QuestFlags", idx, j);
+
+            packet.ResetBitReader();
+
+            packet.ReadBit("Repeatable", idx);
+            packet.ReadBit("Important", idx);
+
+            uint questTitleLen = packet.ReadBits(9);
+            gossipQuest.Title = packet.ReadWoWString("QuestTitle", questTitleLen, idx);
+
+            return gossipQuest;
+        }
+
         [HasSniffData]
         [Parser(Opcode.SMSG_GOSSIP_MESSAGE)]
         public static void HandleNpcGossip(Packet packet)
@@ -98,7 +121,7 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             packetGossip.MenuId = (uint)menuId;
 
             int friendshipFactionID = packet.ReadInt32("FriendshipFactionID");
-            CoreParsers.NpcHandler.AddGossipAddon(packetGossip.MenuId, friendshipFactionID, guid, packet.TimeSpan);
+            CoreParsers.NpcHandler.AddGossipAddon(packetGossip.MenuId, friendshipFactionID, 0, guid, packet.TimeSpan);
 
             uint broadcastTextID = 0;
             uint npcTextID = 0;
@@ -338,6 +361,69 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
 
             if (packet.Opcode == Opcodes.GetOpcode(Opcode.CMSG_TALK_TO_GOSSIP, Direction.ClientToServer))
                 packet.Holder.GossipHello = new PacketGossipHello { GossipSource = guid };
+        }
+
+        [Parser(Opcode.SMSG_GOSSIP_OPTION_NPC_INTERACTION)]
+        public static void HandleGossipOptionNPCInteraction(Packet packet)
+        {
+            packet.ReadPackedGuid128("GossipGUID");
+            var gossipNpcOptionID = packet.ReadInt32("GossipNpcOptionID");
+            var hasFriendshipFactionID = packet.ReadBit();
+
+            if (hasFriendshipFactionID)
+                packet.ReadInt32("FriendshipFactionID");
+
+            CoreParsers.NpcHandler.AddGossipNpcOption(gossipNpcOptionID, packet.TimeSpan, true);
+        }
+
+        [Parser(Opcode.SMSG_GOSSIP_POI)]
+        public static void HandleGossipPoi(Packet packet)
+        {
+            var protoPoi = packet.Holder.GossipPoi = new();
+            PointsOfInterest gossipPOI = new PointsOfInterest();
+
+            gossipPOI.ID = protoPoi.Id = packet.ReadInt32("ID");
+            gossipPOI.Flags = protoPoi.Flags = (uint)packet.ReadInt32("Flags");
+            Vector3 pos = packet.ReadVector3("Coordinates");
+            gossipPOI.PositionX = pos.X;
+            gossipPOI.PositionY = pos.Y;
+            gossipPOI.PositionZ = pos.Z;
+            protoPoi.Coordinates = new Vec2() { X = pos.X, Y = pos.Y };
+            protoPoi.Height = pos.Z;
+
+            gossipPOI.Icon = packet.ReadInt32E<GossipPOIIcon>("Icon");
+            gossipPOI.Importance = protoPoi.Importance = (uint)packet.ReadInt32("Importance");
+            protoPoi.Icon = (uint)gossipPOI.Icon;
+            gossipPOI.WMOGroupID = packet.ReadInt32("WMOGroupID");
+
+            packet.ResetBitReader();
+            uint bit84 = packet.ReadBits(6);
+            gossipPOI.Name = protoPoi.Name = packet.ReadWoWString("Name", bit84);
+
+            Storage.GossipPOIs.Add(gossipPOI, packet.TimeSpan);
+            CoreParsers.NpcHandler.UpdateTempGossipOptionActionPOI(packet.TimeSpan, gossipPOI.ID);
+        }
+
+        [Parser(Opcode.SMSG_NPC_INTERACTION_OPEN_RESULT)]
+        public static void HandleNpcInteractionOpenResult(Packet packet)
+        {
+            packet.ReadPackedGuid128("Guid");
+            packet.ReadInt32("InteractionType");
+            packet.ReadBit("Success");
+        }
+
+        [Parser(Opcode.SMSG_TRAINER_BUY_FAILED)]
+        public static void HandleTrainerBuyFailed(Packet packet)
+        {
+            packet.ReadPackedGuid128("TrainerGUID");
+            packet.ReadInt32<SpellId>("SpellID");
+            packet.ReadUInt32("TrainerFailedReason");
+        }
+
+        [Parser(Opcode.CMSG_BUY_BANK_SLOT)]
+        public static void HandleBuyBankSlot(Packet packet)
+        {
+            packet.ReadPackedGuid128("Banker");
         }
     }
 }

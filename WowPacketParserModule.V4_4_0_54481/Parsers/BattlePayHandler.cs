@@ -12,6 +12,7 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         [Parser(Opcode.SMSG_BATTLE_PAY_CONFIRM_PURCHASE)]
         [Parser(Opcode.SMSG_BATTLE_PAY_DELIVERY_ENDED)]
         [Parser(Opcode.SMSG_BATTLE_PAY_DELIVERY_STARTED)]
+        [Parser(Opcode.SMSG_BATTLE_PAY_DISTRIBUTION_ASSIGN_VAS_RESPONSE)]
         [Parser(Opcode.SMSG_BATTLE_PAY_DISTRIBUTION_UNREVOKED)]
         [Parser(Opcode.SMSG_BATTLE_PAY_DISTRIBUTION_UPDATE)]
         [Parser(Opcode.SMSG_BATTLE_PAY_GET_DISTRIBUTION_LIST_RESPONSE)]
@@ -42,6 +43,14 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         [Parser(Opcode.SMSG_VAS_PURCHASE_STATE_UPDATE)]
         [Parser(Opcode.CMSG_BATTLE_PAY_GET_PURCHASE_LIST)]
         [Parser(Opcode.CMSG_BATTLE_PAY_GET_PRODUCT_LIST)]
+        [Parser(Opcode.CMSG_BATTLE_PAY_ACK_FAILED_RESPONSE)]
+        [Parser(Opcode.CMSG_BATTLE_PAY_CANCEL_OPEN_CHECKOUT)]
+        [Parser(Opcode.CMSG_BATTLE_PAY_CONFIRM_PURCHASE_RESPONSE)]
+        [Parser(Opcode.CMSG_BATTLE_PAY_DISTRIBUTION_ASSIGN_TO_TARGET)]
+        [Parser(Opcode.CMSG_BATTLE_PAY_DISTRIBUTION_ASSIGN_VAS)]
+        [Parser(Opcode.CMSG_BATTLE_PAY_OPEN_CHECKOUT)]
+        [Parser(Opcode.CMSG_BATTLE_PAY_REQUEST_PRICE_INFO)]
+        [Parser(Opcode.CMSG_BATTLE_PAY_START_PURCHASE)]
         public static void HandleBattlePay(Packet packet)
         {
             // No BattlePay support, do not ask

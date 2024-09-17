@@ -44,12 +44,24 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         {
             var earnedCount = packet.ReadUInt32("EarnedCount", idx);
             var progressCount = packet.ReadUInt32("ProgressCount", idx);
-        
+
             for (var i = 0; i < earnedCount; ++i)
                 ReadEarnedAchievement(packet, idx, "Earned", i);
-        
+
             for (var i = 0; i < progressCount; ++i)
                 ReadCriteriaProgress(packet, idx, "Progress", i);
+        }
+
+        [Parser(Opcode.SMSG_ACHIEVEMENT_EARNED)]
+        public static void HandleAchievementEarned(Packet packet)
+        {
+            packet.ReadPackedGuid128("Sender");
+            packet.ReadPackedGuid128("Earner");
+            packet.ReadUInt32<AchievementId>("AchievementID");
+            packet.ReadPackedTime("Time");
+            packet.ReadUInt32("EarnerNativeRealm");
+            packet.ReadUInt32("EarnerVirtualRealm");
+            packet.ReadBit("Initial");
         }
 
         [Parser(Opcode.SMSG_CRITERIA_UPDATE)]
@@ -81,7 +93,7 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         {
             ReadAllAchievements(packet, "Data");
         }
-        
+
         [Parser(Opcode.SMSG_ACCOUNT_CRITERIA_UPDATE)]
         public static void HandleCriteriaUpdateAccount(Packet packet)
         {
@@ -95,6 +107,29 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
 
             for (var i = 0; i < count; ++i)
                 ReadCriteriaProgress(packet, "Progress", i);
+        }
+
+        [Parser(Opcode.SMSG_BROADCAST_ACHIEVEMENT)]
+        public static void HandleBroadcastAchievement(Packet packet)
+        {
+            var nameLength = packet.ReadBits(7);
+            packet.ReadBit("GuildAchievement");
+            packet.ReadPackedGuid128("PlayerGUID");
+            packet.ReadUInt32("AchievementID");
+            packet.ReadWoWString("Name", nameLength);
+        }
+
+        [Parser(Opcode.SMSG_CRITERIA_DELETED)]
+        public static void HandleDeleted(Packet packet)
+        {
+            packet.ReadInt32("CriteriaID");
+        }
+
+        [Parser(Opcode.SMSG_RESPOND_INSPECT_ACHIEVEMENTS)]
+        public static void HandleRespondInspectAchievements(Packet packet)
+        {
+            packet.ReadPackedGuid128("Player");
+            ReadAllAchievements(packet, "Data");
         }
     }
 }

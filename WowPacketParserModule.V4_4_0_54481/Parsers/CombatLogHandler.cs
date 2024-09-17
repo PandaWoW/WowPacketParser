@@ -328,5 +328,154 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             if (bit100)
                 SpellHandler.ReadSpellCastLogData(packet);
         }
+
+        [Parser(Opcode.SMSG_ENVIRONMENTAL_DAMAGE_LOG)]
+        public static void HandleEnvirenmentalDamageLog(Packet packet)
+        {
+            packet.ReadPackedGuid128("Victim");
+
+            packet.ReadByteE<EnvironmentDamage>("Type");
+
+            packet.ReadInt32("Amount");
+            packet.ReadInt32("Resisted");
+            packet.ReadInt32("Absorbed");
+
+            packet.ResetBitReader();
+            var bit76 = packet.ReadBit("HasLogData");
+            if (bit76)
+                SpellHandler.ReadSpellCastLogData(packet);
+        }
+
+        [Parser(Opcode.SMSG_PARTY_KILL_LOG)]
+        public static void HandlePartyKillLog(Packet packet)
+        {
+            packet.ReadPackedGuid128("PlayerGUID");
+            packet.ReadPackedGuid128("VictimGUID");
+        }
+
+        [Parser(Opcode.SMSG_PROC_RESIST)]
+        public static void HandleProcResist(Packet packet)
+        {
+            packet.ReadPackedGuid128("Caster");
+            packet.ReadPackedGuid128("Target");
+
+            packet.ReadInt32<SpellId>("SpellID");
+
+            var bit20 = packet.ReadBit("HasRolled");    // unconfirmed order
+            var bit32 = packet.ReadBit("HasNeeded");    // unconfirmed order
+
+            if (bit20)
+                packet.ReadSingle("Rolled");            // unconfirmed order
+
+            if (bit32)
+                packet.ReadSingle("Needed");            // unconfirmed order
+        }
+
+        [Parser(Opcode.SMSG_SPELL_ABSORB_LOG)]
+        public static void HandleSpellAbsorbLog(Packet packet)
+        {
+            packet.ReadPackedGuid128("Victim");
+            packet.ReadPackedGuid128("Caster");
+
+            packet.ReadInt32("InterruptedSpellID");
+            packet.ReadInt32<SpellId>("SpellID");
+            packet.ReadPackedGuid128("ShieldTargetGUID?");
+            packet.ReadInt32("Absorbed");
+            packet.ReadInt32("OriginalDamage"); // OriginalDamage (before HitResult -> BeforeCrit and Armor etc)
+
+            packet.ResetBitReader();
+            packet.ReadBit("UnkBit");
+            var hasLogData = packet.ReadBit("HasLogData");
+
+            if (hasLogData)
+                SpellHandler.ReadSpellCastLogData(packet);
+        }
+
+        [Parser(Opcode.SMSG_SPELL_DAMAGE_SHIELD)]
+        public static void ReadSpellDamageShield(Packet packet)
+        {
+            packet.ReadPackedGuid128("Attacker");
+            packet.ReadPackedGuid128("Defender");
+            packet.ReadInt32<SpellId>("SpellID");
+            packet.ReadInt32("TotalDamage");
+            packet.ReadInt32("OriginalDamage");
+            packet.ReadInt32("OverKill");
+            packet.ReadInt32("SchoolMask");
+            packet.ReadInt32("LogAbsorbed");
+
+            packet.ResetBitReader();
+
+            var hasLogData = packet.ReadBit("HasLogData");
+            if (hasLogData)
+                SpellHandler.ReadSpellCastLogData(packet);
+        }
+
+        [Parser(Opcode.SMSG_SPELL_HEAL_ABSORB_LOG)]
+        public static void HandleSpellHealAbsorbLog(Packet packet)
+        {
+            packet.ReadPackedGuid128("Target");
+            packet.ReadPackedGuid128("AbsorbCaster");
+            packet.ReadPackedGuid128("Healer");
+            packet.ReadInt32("AbsorbSpellID");
+            packet.ReadInt32("AbsorbedSpellID");
+            packet.ReadInt32("Absorbed");
+            packet.ReadInt32("OriginalHeal");
+            var hasContentTuning = packet.ReadBit("HasContentTuning");
+
+            if (hasContentTuning)
+                ReadContentTuningParams(packet, "ContentTuning");
+        }
+
+        [Parser(Opcode.SMSG_SPELL_INSTAKILL_LOG)]
+        public static void HandleSpellInstakillLog(Packet packet)
+        {
+            packet.ReadPackedGuid128("Target");
+            packet.ReadPackedGuid128("Caster");
+            packet.ReadUInt32<SpellId>("SpellID");
+        }
+
+        [Parser(Opcode.SMSG_SPELL_INTERRUPT_LOG)]
+        public static void HandleSpellInterruptLog(Packet packet)
+        {
+            packet.ReadPackedGuid128("Caster");
+            packet.ReadPackedGuid128("Victim");
+
+            packet.ReadInt32<SpellId>("InterruptedSpellID");
+            packet.ReadInt32<SpellId>("SpellID");
+        }
+
+        [Parser(Opcode.SMSG_SPELL_MISS_LOG)]
+        public static void HandleSpellMissLog(Packet packet)
+        {
+            packet.ReadInt32<SpellId>("SpellID");
+            packet.ReadPackedGuid128("Caster");
+
+            var spellLogMissEntryCount = packet.ReadInt32("SpellLogMissEntryCount");
+            for (int i = 0; i < spellLogMissEntryCount; i++)
+            {
+                packet.ReadPackedGuid128("Victim", i);
+                packet.ReadByte("MissReason", i);
+
+                packet.ResetBitReader();
+
+                var hasSpellLogMissDebug = packet.ReadBit("HasSpellLogMissDebug", i);
+                if (hasSpellLogMissDebug)
+                {
+                    packet.ReadSingle("HitRoll", i);
+                    packet.ReadSingle("HitRollNeededHitRollNeeded", i);
+                }
+            }
+        }
+
+        [Parser(Opcode.SMSG_SPELL_OR_DAMAGE_IMMUNE)]
+        public static void HandleSpellOrDamageImmune(Packet packet)
+        {
+            packet.ReadPackedGuid128("CasterGUID");
+            packet.ReadPackedGuid128("VictimGUID");
+
+            packet.ReadInt32<SpellId>("SpellID");
+
+            packet.ReadBit("IsPeriodic");
+        }
     }
 }

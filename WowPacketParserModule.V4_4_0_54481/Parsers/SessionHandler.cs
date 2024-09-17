@@ -31,6 +31,23 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             packet.ReadBytes("RealmJoinTicket", realmJoinTicketSize);
         }
 
+        [Parser(Opcode.SMSG_CHANGE_REALM_TICKET_RESPONSE)]
+        public static void HandleChangeRealmTicketResponse(Packet packet)
+        {
+            packet.ReadUInt32("Token");
+            packet.ResetBitReader();
+            packet.ReadBit("Allow");
+
+            int protoSize = packet.ReadInt32();
+            packet.ReadBytesTable("Ticket", protoSize);
+        }
+
+        [Parser(Opcode.SMSG_CHARACTER_LOGIN_FAILED)]
+        public static void HandleLoginFailed(Packet packet)
+        {
+            packet.ReadByteE<ResponseCode>("Code");
+        }
+
         [Parser(Opcode.SMSG_ENTER_ENCRYPTED_MODE)]
         public static void HandleEnterEncryptedMode(Packet packet)
         {
@@ -279,7 +296,7 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             packet.ReadInt32("VirtualRealmAddress");
         }
 
-        [Parser(Opcode.SMSG_REALM_QUERY_RESPONSE, ClientVersionBuild.V8_1_0_28724)]
+        [Parser(Opcode.SMSG_REALM_QUERY_RESPONSE)]
         public static void HandleRealmQueryResponse(Packet packet)
         {
             packet.ReadUInt32("VirtualRealmAddress");
@@ -301,7 +318,52 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             }
         }
 
+        [Parser(Opcode.SMSG_LOGOUT_RESPONSE)]
+        public static void HandlePlayerLogoutResponse(Packet packet)
+        {
+            packet.ReadInt32("Reason");
+            packet.ReadBit("Instant");
+            // From TC:
+            // Reason 1: IsInCombat
+            // Reason 2: InDuel or frozen by GM
+            // Reason 3: Jumping or Falling
+        }
+
+        [Parser(Opcode.SMSG_WAIT_QUEUE_UPDATE)]
+        public static void HandleWaitQueueUpdate(Packet packet)
+        {
+            packet.ReadInt32("WaitCount");
+            packet.ReadInt32("WaitTime");
+            packet.ReadInt32("AllowedFactionGroupForCharacterCreate");
+            packet.ReadBit("HasFCM");
+            packet.ReadBit("CanCreateOnlyIfExisting");
+        }
+
+        [Parser(Opcode.CMSG_CHANGE_REALM_TICKET)]
+        public static void HandleChangeRealmTicket(Packet packet)
+        {
+            packet.ReadUInt32("Token");
+            packet.ReadBytes("Secret", 32);
+        }
+
+        [Parser(Opcode.CMSG_CONNECT_TO_FAILED)]
+        public static void HandleRedirectFailed(Packet packet)
+        {
+            packet.ReadUInt32("Serial");
+            packet.ReadSByte("Con");
+        }
+
+        [Parser(Opcode.CMSG_LOGOUT_REQUEST)]
+        public static void HandleLogoutRequest(Packet packet)
+        {
+            packet.ReadBit("IdleLogout");
+        }
+
         [Parser(Opcode.CMSG_ENTER_ENCRYPTED_MODE_ACK)]
+        [Parser(Opcode.SMSG_LOGOUT_COMPLETE)]
+        [Parser(Opcode.SMSG_WAIT_QUEUE_FINISH)]
+        [Parser(Opcode.CMSG_KEEP_ALIVE)]
+        [Parser(Opcode.CMSG_LOGOUT_CANCEL)]
         public static void HandleSessionZero(Packet packet)
         {
         }
