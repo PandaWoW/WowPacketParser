@@ -298,8 +298,19 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         }
 
         [Parser(Opcode.CMSG_AUTOBANK_ITEM)]
-        [Parser(Opcode.CMSG_AUTOSTORE_BANK_ITEM)]
         public static void HandleAutoItem(Packet packet)
+        {
+            ReadInvUpdate(packet);
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                packet.ReadByteE<BankType>("BankType");
+
+            packet.ReadByte("Bag");
+            packet.ReadByte("Slot");
+        }
+
+        [Parser(Opcode.CMSG_AUTOSTORE_BANK_ITEM)]
+        public static void HandleAutoStoreItem(Packet packet)
         {
             ReadInvUpdate(packet);
 
@@ -409,6 +420,101 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         {
             packet.ReadByte("Slot");
             packet.ReadByte("PackSlot");
+        }
+
+        [Parser(Opcode.CMSG_READ_ITEM)]
+        public static void HandleReadItem(Packet packet)
+        {
+            packet.ReadByte("PackSlot");
+            packet.ReadByte("Slot");
+        }
+
+        [Parser(Opcode.CMSG_REMOVE_NEW_ITEM)]
+        public static void HandleRemoveNewItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("ItemGUID");
+        }
+
+        [Parser(Opcode.CMSG_REPAIR_ITEM)]
+        public static void HandleRepairItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("NpcGUID");
+            packet.ReadPackedGuid128("ItemGUID");
+
+            packet.ResetBitReader();
+            packet.ReadBit("UseGuildBank");
+        }
+
+        [Parser(Opcode.CMSG_SELL_ITEM)]
+        public static void HandleSellItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("VendorGUID");
+            packet.ReadPackedGuid128("ItemGUID");
+
+            packet.ReadUInt32("Amount");
+        }
+
+        [Parser(Opcode.CMSG_SOCKET_GEMS)]
+        public static void HandleSocketGems(Packet packet)
+        {
+            packet.ReadPackedGuid128("GUID");
+            for (var i = 0; i < 3; ++i)
+                packet.ReadPackedGuid128("Gem GUID", i);
+        }
+
+        [Parser(Opcode.CMSG_SPLIT_ITEM)]
+        public static void HandleSplitItem(Packet packet)
+        {
+            ReadInvUpdate(packet);
+
+            packet.ReadByte("FromPackSlot");
+            packet.ReadByte("FromSlot");
+            packet.ReadByte("ToPackSlot");
+            packet.ReadByte("ToSlot");
+            packet.ReadInt32("Quantity");
+        }
+
+        [Parser(Opcode.CMSG_SWAP_INV_ITEM)]
+        public static void HandleSwapInvItem(Packet packet)
+        {
+            ReadInvUpdate(packet);
+
+            packet.ReadByte("Slot2");
+            packet.ReadByte("Slot1");
+        }
+
+        [Parser(Opcode.CMSG_SWAP_ITEM)]
+        public static void HandleSwapItem(Packet packet)
+        {
+            ReadInvUpdate(packet);
+
+            packet.ReadByte("ContainerSlotB");
+            packet.ReadByte("ContainerSlotA");
+            packet.ReadByte("SlotB");
+            packet.ReadByte("SlotA");
+        }
+
+        [Parser(Opcode.CMSG_USE_CRITTER_ITEM)]
+        public static void HandleUseCritterItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("ItemGUID");
+        }
+
+        [Parser(Opcode.CMSG_USE_ITEM)]
+        public static void HandleUseItem(Packet packet)
+        {
+            var useItem = packet.Holder.ClientUseItem = new();
+            useItem.PackSlot = packet.ReadByte("PackSlot");
+            useItem.ItemSlot = packet.ReadByte("Slot");
+            useItem.CastItem = packet.ReadPackedGuid128("CastItem");
+
+            useItem.SpellId = SpellHandler.ReadSpellCastRequest(packet, "Cast");
+        }
+
+        [Parser(Opcode.CMSG_WRAP_ITEM)]
+        public static void HandleWrapItem(Packet packet)
+        {
+            ReadInvUpdate(packet, "InvUpdate");
         }
 
         [Parser(Opcode.SMSG_BAG_CLEANUP_FINISHED)]

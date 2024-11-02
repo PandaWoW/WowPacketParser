@@ -99,5 +99,19 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             packet.ReadBit("Accepted");
             packet.ReadBit("Forfeited");
         }
+
+        [Parser(Opcode.CMSG_SEND_CONTACT_LIST)]
+        public static void HandleSendContactList(Packet packet)
+        {
+            packet.ReadUInt32("Flags");
+        }
+
+        [Parser(Opcode.CMSG_SET_CONTACT_NOTES)]
+        public static void HandleSetContactNotes(Packet packet)
+        {
+            ReadQualifiedGUID(packet, "QualifiedGUID");
+            var notesLength = packet.ReadBits(10);
+            packet.ReadWoWString("Notes", notesLength);
+        }
     }
 }

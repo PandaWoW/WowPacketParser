@@ -995,7 +995,120 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         [Parser(Opcode.CMSG_PETITION_SHOW_SIGNATURES)]
         public static void HandleClientPetitionShowSignatures(Packet packet)
         {
-            packet.ReadGuid("PetitionGuid");
+            packet.ReadPackedGuid128("PetitionGuid");
+        }
+
+        [Parser(Opcode.CMSG_QUERY_PETITION)]
+        public static void HandleQueryPetition(Packet packet)
+        {
+            packet.ReadUInt32("PetitionID");
+            packet.ReadPackedGuid128("ItemGUID");
+        }
+
+        [Parser(Opcode.CMSG_REQUEST_GUILD_PARTY_STATE)]
+        public static void HandleGuildUpdatePartyState(Packet packet)
+        {
+            packet.ReadPackedGuid128("GuildGUID");
+        }
+
+        [Parser(Opcode.CMSG_REQUEST_GUILD_REWARDS_LIST)]
+        public static void HandleRequestGuildRewardsList(Packet packet)
+        {
+            packet.ReadTime64("CurrentVersion");
+        }
+
+        [Parser(Opcode.CMSG_SAVE_GUILD_EMBLEM)]
+        public static void HandleSaveGuildEmblem(Packet packet)
+        {
+            packet.ReadPackedGuid128("Vendor");
+            packet.ReadInt32("EColor");
+            packet.ReadInt32("EStyle");
+            packet.ReadInt32("BColor");
+            packet.ReadInt32("BStyle");
+            packet.ReadInt32("Bg");
+        }
+
+        [Parser(Opcode.CMSG_SIGN_PETITION)]
+        public static void HandleSignPetition(Packet packet)
+        {
+            packet.ReadPackedGuid128("PetitionGUID");
+            packet.ReadByte("Choice");
+        }
+
+        [Parser(Opcode.CMSG_SPLIT_GUILD_BANK_ITEM)]
+        public static void HandleSplitGuildBankItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("Banker");
+            packet.ReadByte("BankTab");
+            packet.ReadByte("BankSlot");
+            packet.ReadByte("BankTab1");
+            packet.ReadByte("BankSlot1");
+            packet.ReadUInt32("StackCount");
+        }
+
+        [Parser(Opcode.CMSG_SPLIT_GUILD_BANK_ITEM_TO_INVENTORY)]
+        [Parser(Opcode.CMSG_SPLIT_ITEM_TO_GUILD_BANK)]
+        public static void HandleSplitGuildBankItemToInventory(Packet packet)
+        {
+            packet.ReadPackedGuid128("Banker");
+            packet.ReadByte("BankTab");
+            packet.ReadByte("BankSlot");
+            packet.ReadByte("ContainerItemSlot");
+            packet.ReadUInt32("StackCount");
+
+            if (packet.ReadBit())
+                packet.ReadByte("ContainerSlot");
+        }
+
+        [Parser(Opcode.CMSG_STORE_GUILD_BANK_ITEM)]
+        public static void HandleStoreGuildBankItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("Banker");
+            packet.ReadByte("BankTab");
+            packet.ReadByte("BankSlot");
+            packet.ReadByte("ContainerItemSlot");
+
+            if (packet.ReadBit())
+                packet.ReadByte("ContainerSlot");
+        }
+
+        [Parser(Opcode.CMSG_SWAP_GUILD_BANK_ITEM_WITH_GUILD_BANK_ITEM)]
+        public static void HandleSwapGuildBankItemWithGuildBankItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("Banker");
+            packet.ReadByte("BankTab");
+            packet.ReadByte("BankSlot");
+            packet.ReadByte("BankTab1");
+            packet.ReadByte("BankSlot1");
+        }
+
+        [Parser(Opcode.CMSG_SWAP_ITEM_WITH_GUILD_BANK_ITEM)]
+        public static void HandleSwapItemWithGuildBankItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("Banker");
+            packet.ReadByte("BankTab");
+            packet.ReadByte("BankSlot");
+            packet.ReadByte("ContainerItemSlot");
+
+            if (packet.ReadBit())
+                packet.ReadByte("ContainerSlot");
+        }
+
+        [Parser(Opcode.CMSG_TURN_IN_PETITION)]
+        public static void HandleTurnInPetition(Packet packet)
+        {
+            packet.ReadPackedGuid128("PetitionGUID");
+            packet.ReadInt32("BgColorRGB");
+            packet.ReadInt32("IconStyle");
+            packet.ReadInt32("IconColorRGB");
+            packet.ReadInt32("BorderStyle");
+            packet.ReadInt32("BorderColorRGB");
+        }
+
+        [Parser(Opcode.CMSG_ACCEPT_GUILD_INVITE, ClientVersionBuild.V4_4_1_57294)]
+        public static void HandleAcceptGuildInvite441(Packet packet)
+        {
+            packet.ReadPackedGuid128("GuildGUID");
         }
 
         [Parser(Opcode.CMSG_GUILD_BANK_REMAINING_WITHDRAW_MONEY_QUERY)]
@@ -1004,7 +1117,7 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         [Parser(Opcode.SMSG_GUILD_EVENT_RANKS_UPDATED)]
         [Parser(Opcode.SMSG_GUILD_EVENT_TAB_ADDED)]
         [Parser(Opcode.SMSG_GUILD_MEMBER_DAILY_RESET)]
-        [Parser(Opcode.CMSG_ACCEPT_GUILD_INVITE)]
+        [Parser(Opcode.CMSG_ACCEPT_GUILD_INVITE, ClientVersionBuild.V4_4_0_54481, ClientVersionBuild.V4_4_1_57294)]
         [Parser(Opcode.CMSG_GUILD_CHALLENGE_UPDATE_REQUEST)]
         [Parser(Opcode.CMSG_GUILD_DECLINE_INVITATION)]
         [Parser(Opcode.CMSG_GUILD_DELETE)]

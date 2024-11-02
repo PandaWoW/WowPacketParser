@@ -845,14 +845,12 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         [Parser(Opcode.SMSG_NEW_WORLD)]
         public static void HandleNewWorld(Packet packet)
         {
-            WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId = (uint)packet.ReadInt32<MapId>("Map");
+            CoreParsers.MovementHandler.CurrentMapId = (uint)packet.ReadInt32<MapId>("Map");
             packet.ReadVector4("Position");
-            packet.ReadInt32("Unused901_1");
-            packet.ReadInt32("Unused901_2");
             packet.ReadUInt32("Reason");
             packet.ReadVector3("MovementOffset");
 
-            packet.AddSniffData(StoreNameType.Map, (int)WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId, "NEW_WORLD");
+            packet.AddSniffData(StoreNameType.Map, (int)CoreParsers.MovementHandler.CurrentMapId, "NEW_WORLD");
         }
 
         [Parser(Opcode.SMSG_TRANSFER_ABORTED)]
@@ -979,7 +977,21 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             packet.ReadInt32("SplineID");
         }
 
+        [Parser(Opcode.CMSG_SET_ACTIVE_MOVER)]
+        public static void HandleSetActiveMover(Packet packet)
+        {
+            packet.ReadPackedGuid128("ActiveMover");
+        }
+
+        [Parser(Opcode.CMSG_SUMMON_RESPONSE)]
+        public static void HandleSummonResponse(Packet packet)
+        {
+            packet.ReadPackedGuid128("SummonerGUID");
+            packet.ReadBit("Accept");
+        }
+
         [Parser(Opcode.SMSG_ABORT_NEW_WORLD)]
+        [Parser(Opcode.CMSG_WORLD_PORT_RESPONSE)]
         public static void HandleAbortNewWorld(Packet packet)
         {
         }
