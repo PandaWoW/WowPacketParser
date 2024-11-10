@@ -25,14 +25,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("spawnMask", TargetedDatabaseFlag.TillWarlordsOfDraenor)]
         public uint? SpawnMask;
 
-        [DBFieldName("spawnDifficulties", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.AnyClassic)]
+        //[DBFieldName("spawnDifficulties", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.AnyClassic)]
         public string spawnDifficulties;
 
-        [DBFieldName("phaseMask", TargetedDatabaseFlag.TillWrathOfTheLichKing)]
+        //[DBFieldName("phaseMask", TargetedDatabaseFlag.TillWrathOfTheLichKing)]
         public uint? PhaseMask;
 
-        [DBFieldName("PhaseId", TargetedDatabaseFlag.SinceCataclysm | TargetedDatabaseFlag.AnyClassic)]
-        public string PhaseID;
+        [DBFieldName("PhaseId")]
+        public int? PhaseID;
 
         [DBFieldName("PhaseGroup", TargetedDatabaseFlag.SinceCataclysm | TargetedDatabaseFlag.AnyClassic)]
         public int? PhaseGroup;
@@ -58,7 +58,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("spawntimesecs")]
         public int? SpawnTimeSecs;
 
-        [DBFieldName("wander_distance")]
+        [DBFieldName("spawndist")]
         public float? WanderDistance;
 
         [DBFieldName("currentwaypoint")]
@@ -67,31 +67,31 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("curhealth", TargetedDatabaseFlag.TillShadowlands)]
         public uint? CurHealth;
 
-        [DBFieldName("curHealthPct", TargetedDatabaseFlag.Dragonflight | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic)]
+        //[DBFieldName("curHealthPct", TargetedDatabaseFlag.Dragonflight | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic)]
         public uint? CurHealthPct;
 
-        [DBFieldName("curmana", TargetedDatabaseFlag.TillShadowlands)]
+        //[DBFieldName("curmana", TargetedDatabaseFlag.TillShadowlands)]
         public uint? CurMana;
 
         [DBFieldName("MovementType")]
         public uint? MovementType;
 
-        [DBFieldName("npcflag", false, false, true)]
+        [DBFieldName("npcflag")]
         public uint? NpcFlag;
 
-        [DBFieldName("unit_flags", false, false, true)]
+        [DBFieldName("unit_flags")]
         public uint? UnitFlags;
 
-        [DBFieldName("unit_flags2", false, false, true)]
+        [DBFieldName("unit_flags2")]
         public uint? UnitFlags2;
 
-        [DBFieldName("unit_flags3", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.AnyClassic, false, false, true)]
+        //[DBFieldName("unit_flags3", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.AnyClassic, false, false, true)]
         public uint? UnitFlags3;
 
-        [DBFieldName("dynamicflags", TargetedDatabaseFlag.TillShadowlands | TargetedDatabaseFlag.Classic | TargetedDatabaseFlag.WotlkClassic)]
+        //[DBFieldName("dynamicflags", TargetedDatabaseFlag.TillShadowlands | TargetedDatabaseFlag.AnyClassic)]
         public uint? DynamicFlag;
 
-        [DBFieldName("VerifiedBuild")]
+        //[DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }

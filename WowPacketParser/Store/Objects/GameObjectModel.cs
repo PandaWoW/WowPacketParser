@@ -25,14 +25,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("spawnMask", TargetedDatabaseFlag.TillBattleForAzeroth)]
         public uint? SpawnMask;
 
-        [DBFieldName("spawnDifficulties", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic)]
+        //[DBFieldName("spawnDifficulties", TargetedDatabaseFlag.SinceLegion | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic)]
         public string spawnDifficulties;
 
-        [DBFieldName("phaseMask", TargetedDatabaseFlag.WrathOfTheLichKing)]
+        //[DBFieldName("phaseMask", TargetedDatabaseFlag.WrathOfTheLichKing)]
         public uint? PhaseMask;
 
         [DBFieldName("PhaseId", TargetedDatabaseFlag.SinceCataclysm | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic)]
-        public string PhaseID;
+        public int? PhaseID;
 
         [DBFieldName("PhaseGroup", TargetedDatabaseFlag.SinceCataclysm | TargetedDatabaseFlag.WotlkClassic | TargetedDatabaseFlag.CataClassic)]
         public uint? PhaseGroup;
@@ -61,7 +61,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("state")]
         public uint? State;
 
-        [DBFieldName("VerifiedBuild")]
+        //[DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }

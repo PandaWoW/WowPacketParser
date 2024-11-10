@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using WowPacketParser.Enums;
+using WowPacketParser.Enums.Battlenet;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
 
@@ -17,7 +18,8 @@ namespace WowPacketParser.Loading
             V2_1 = 0x201,
             V2_2 = 0x202,
             V3_0 = 0x300,
-            V3_1 = 0x301
+            V3_1 = 0x301,
+            V3_2 = 0x302
 // ReSharper restore InconsistentNaming
         }
 
@@ -89,8 +91,13 @@ namespace WowPacketParser.Loading
                     break;
                 }
                 case PktVersion.V3_1:
+                case PktVersion.V3_2:
                 {
                     _snifferId = _reader.ReadByte();                                        // sniffer id
+
+                    if (_pktVersion == PktVersion.V3_2)
+                        _reader.ReadUInt32();
+
                     SetBuild(_reader.ReadUInt32());                                         // client build
                     SetLocale(Encoding.ASCII.GetString(_reader.ReadBytes(4)));              // client locale
                     _reader.ReadBytes(40);                                                  // session key
@@ -179,6 +186,7 @@ namespace WowPacketParser.Loading
                     }
                     case PktVersion.V3_0:
                     case PktVersion.V3_1:
+                    case PktVersion.V3_2:
                     {
                         switch (_reader.ReadUInt32())
                         {
@@ -214,7 +222,7 @@ namespace WowPacketParser.Loading
 
                         int additionalSize = _reader.ReadInt32();
                         length = _reader.ReadInt32();
-                        if (additionalSize >= 20 && _snifferId == 'T' && _pktVersion == PktVersion.V3_1)
+                        if (additionalSize >= 20 && _snifferId == 'T' && (_pktVersion == PktVersion.V3_1 || _pktVersion == PktVersion.V3_2))
                         {
                             // TC's PacketLogger - extract socket UUID
                             // (16 bytes address and 4 bytes of port)

@@ -6,30 +6,30 @@ namespace WowPacketParserModule.V5_4_7_17898.Hotfix
     [HotfixStructure(DB2Hash.ItemSparse)]
     public class ItemSparseEntry
     {
-        public int ID { get; set; }
-        public int Quality { get; set; }
+        public uint ID { get; set; }
+        public uint Quality { get; set; }
         [HotfixArray(3)]
         public uint[] Flags { get; set; }
-        public float Unk1 { get; set; }
-        public float Unk2 { get; set; }
-        public int BuyCount { get; set; }
+        public float PriceRandomValue { get; set; }
+        public float PriceVariance { get; set; }
+        public uint BuyCount { get; set; }
         public uint BuyPrice { get; set; }
         public uint SellPrice { get; set; }
-        public int InventoryType { get; set; }
-        public int AllowableRace { get; set; }
+        public uint InventoryType { get; set; }
         public int AllowableClass { get; set; }
-        public int ItemLevel { get; set; }
+        public int AllowableRace { get; set; }
+        public uint ItemLevel { get; set; }
         public int RequiredLevel { get; set; }
-        public int RequiredSkill { get; set; }
-        public int RequiredSkillRank { get; set; }
+        public uint RequiredSkill { get; set; }
+        public uint RequiredSkillRank { get; set; }
         public uint RequiredSpell { get; set; }
-        public int RequiredHonorRank { get; set; }
-        public int RequiredCityRank { get; set; }
-        public int RequiredReputationFaction { get; set; }
-        public int RequiredReputationRank { get; set; }
-        public int MaxCount { get; set; }
-        public int MaxStackSize { get; set; }
-        public int ContainerSlots { get; set; }
+        public uint RequiredHonorRank { get; set; }
+        public uint RequiredCityRank { get; set; }
+        public uint RequiredReputationFaction { get; set; }
+        public uint RequiredReputationRank { get; set; }
+        public uint MaxCount { get; set; }
+        public uint Stackable { get; set; }
+        public uint ContainerSlots { get; set; }
         [HotfixArray(10)]
         public int[] StatType { get; set; }
         [HotfixArray(10)]
@@ -38,10 +38,10 @@ namespace WowPacketParserModule.V5_4_7_17898.Hotfix
         public int[] ScalingStatValue { get; set; }
         [HotfixArray(10)]
         public int[] SocketCostRate { get; set; }
-        public int ScalingStatDistribution { get; set; }
-        public int DamageType { get; set; }
-        public int Delay { get; set; }
-        public int RangedMod { get; set; }
+        public uint ScalingStatDistribution { get; set; }
+        public uint DamageType { get; set; }
+        public uint Delay { get; set; }
+        public float RangedModRange { get; set; }
         [HotfixArray(5)]
         public int[] TriggeredSpell { get; set; }
         [HotfixArray(5)]
@@ -54,37 +54,38 @@ namespace WowPacketParserModule.V5_4_7_17898.Hotfix
         public int[] TriggeredSpellCategories { get; set; }
         [HotfixArray(5)]
         public int[] TriggeredSpellCategoryCooldown { get; set; }
-        public int Bonding { get; set; }
+        public uint Bonding;
         public string Name { get; set; }
-        [HotfixArray(4)]
-        public string[] Names { get; set; }
+        public string Name2 { get; set; }
+        public string Name3 { get; set; }
+        public string Name4 { get; set; }
         public string Description { get; set; }
-        public int PageText { get; set; }
-        public int Language { get; set; }
-        public int PageMaterial { get; set; }
-        public int StartQuest { get; set; }
-        public int LockId { get; set; }
+        public uint PageText { get; set; }
+        public uint LanguageID { get; set; }
+        public uint PageMaterial { get; set; }
+        public uint StartQuest { get; set; }
+        public uint LockID { get; set; }
         public int Material { get; set; }
-        public int SheathType { get; set; }
-        public int RandomProperty { get; set; }
+        public uint Sheath { get; set; }
+        public uint RandomProperty { get; set; }
         public uint RandomSuffix { get; set; }
-        public int ItemSet { get; set; }
-        public int AreaID { get; set; }
-        public int MapID { get; set; }
-        public int BagFamily { get; set; }
-        public int TotemCategory { get; set; }
+        public uint ItemSet { get; set; }
+        public uint Area { get; set; }
+        public uint Map { get; set; }
+        public uint BagFamily { get; set; }
+        public uint TotemCategory { get; set; }
         [HotfixArray(3)]
-        public int[] SocketColor { get; set; }
+        public uint[] Color { get; set; }
         [HotfixArray(3)]
-        public int[] SocketItem { get; set; }
+        public uint[] Content { get; set; }
         public int SocketBonus { get; set; }
-        public int GemProperties { get; set; }
-        public int ArmorDamageModifier { get; set; }
-        public int Duration { get; set; }
-        public int LimitCategory { get; set; }
-        public int Holiday { get; set; }
-        public int StatScalingFactor { get; set; }
-        public int CurrencySubstitutionID { get; set; }
+        public uint GemProperties { get; set; }
+        public float ArmorDamageModifier { get; set; }
+        public uint Duration { get; set; }
+        public uint ItemLimitCategory { get; set; }
+        public uint HolidayId { get; set; }
+        public float StatScalingFactor { get; set; }
+        public int CurrencySubstitutionId { get; set; }
         public int CurrencySubstitutionCount { get; set; }
     }
 }

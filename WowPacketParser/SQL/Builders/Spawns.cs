@@ -159,10 +159,10 @@ namespace WowPacketParser.SQL.Builders
                         string data = string.Join(" - ", creature.Phases);
                         if (string.IsNullOrEmpty(data) || Settings.ForcePhaseZero)
                             data = "0";
-                        row.Data.PhaseID = data;
+                        row.Data.PhaseID = 169;
                     }
                     else
-                        row.Data.PhaseID = creature.PhaseOverride.GetValueOrDefault(0).ToString();
+                        row.Data.PhaseID = 169;
                 }
 
                 if (SQLDatabase.CreatureEquipments.TryGetValue(entry, out var equipList))
@@ -204,10 +204,10 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.CurHealth = (uint)creature.UnitData.MaxHealth;
                 row.Data.CurHealthPct = 100;
                 row.Data.CurMana = (uint)creature.UnitData.MaxPower[0];
-                row.Data.NpcFlag = null;
-                row.Data.UnitFlags = null;
-                row.Data.UnitFlags2 = null;
-                row.Data.UnitFlags3 = null;
+                row.Data.NpcFlag = 0;
+                row.Data.UnitFlags = 0;
+                row.Data.UnitFlags2 = 0;
+                row.Data.UnitFlags3 = 0;
                 row.Data.DynamicFlag = 0;
 
                 if (creature.UnitData.Health > 1 && (creature.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0)
@@ -448,7 +448,7 @@ namespace WowPacketParser.SQL.Builders
                     if (string.IsNullOrEmpty(data) || Settings.ForcePhaseZero)
                         data = "0";
 
-                    row.Data.PhaseID = data;
+                    row.Data.PhaseID = 169;
                 }
 
                 if (!go.IsOnTransport())

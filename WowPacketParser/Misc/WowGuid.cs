@@ -234,7 +234,15 @@ namespace WowPacketParser.Misc
             if (Low == 0)
                 return HighGuidTypeLegacy.None;
 
-            var highGUID = (HighGuidTypeLegacy)((Low & 0xF0F0000000000000) >> 52);
+            if (Low == 17415421472733659157)
+            {
+
+            }
+
+            var highGUID = (HighGuidTypeLegacy)((Low & 0xF0F0000000000000) >> 48);
+
+            highGUID = (HighGuidTypeLegacy)((Low & 0xF0F0000000000000) >> 52);
+
             switch ((int)highGUID & 0xF00)
             {
                 case 0x0:
@@ -282,7 +290,11 @@ namespace WowPacketParser.Misc
                 }
             }
 
-            return "Full: 0x" + Low.ToString("X8") + " Type: " + GetHighType()
+            var t = (Low >> 48) &0x0000FFFF;
+            int intGuid = (int)(t >> 4) & 0x00000FFF;
+            uint entry = (uint)((Low & 0x000FFFFF00000000) >> 32);
+
+            return "Full: 0x" + Low.ToString("X8") + " Type: " + GetHighType() + " 0x" + intGuid.ToString("X3") + " entry: " + entry
                 + " Low: " + GetLow() + (String.IsNullOrEmpty(name) ? String.Empty : (" Name: " + name));
         }
     }

@@ -18,6 +18,8 @@ namespace WowPacketParser
             SetUpWindowTitle();
             SetUpConsole();
 
+            Console.ReadKey();
+
             var files = args.ToList();
             if (files.Count == 0)
             {
