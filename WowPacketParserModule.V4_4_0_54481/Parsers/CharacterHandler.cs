@@ -38,6 +38,9 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             data.Level = packet.ReadByte("Level", idx);
             packet.ReadByte("Unused915", idx);
 
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                packet.ReadInt32("TimerunningSeasonID");
+
             data.Name = packet.ReadWoWString("Name", nameLength, idx);
 
             return data;
@@ -677,8 +680,16 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             var int32 = packet.ReadInt32("Count");
             for (var i = 0; i < int32; i++)
             {
-                packet.ReadInt32("Power", i);
-                packet.ReadByteE<PowerType>("PowerType", i);
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                {
+                    packet.ReadByteE<PowerType>("PowerType", i);
+                    packet.ReadInt32("Power", i);
+                }
+                else
+                {
+                    packet.ReadInt32("Power", i);
+                    packet.ReadByteE<PowerType>("PowerType", i);
+                }
             }
         }
 

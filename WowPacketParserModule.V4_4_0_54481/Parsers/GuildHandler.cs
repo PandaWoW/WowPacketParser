@@ -40,7 +40,8 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             var officersNoteLen = packet.ReadBits(8);
 
             packet.ReadBit("Authenticated", idx);
-            packet.ReadBit("SorEligible", idx);
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V4_4_1_57294))
+                packet.ReadBit("SorEligible", idx);
 
             Substructures.MythicPlusHandler.ReadDungeonScoreSummary(packet, idx, "DungeonScoreSummary");
 
@@ -403,7 +404,8 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             packet.ResetBitReader();
             var nameLength = packet.ReadBits(6);
             packet.ReadBit("LoggedOn");
-            packet.ReadBit("Mobile");
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V4_4_1_57294))
+                packet.ReadBit("Mobile");
 
             packet.ReadWoWString("Name", nameLength);
         }
