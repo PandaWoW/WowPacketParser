@@ -234,7 +234,7 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
                 packet.ReadInt32("TreasurePickerID", idx, i);
 
             for (var i = 0; i < 6; ++i)
-                ReadRewardItem(packet, "QuestRewards", "ItemChoiceData", i);
+                ReadRewardItem(packet, idx, "ItemChoiceData", i);
 
             packet.ResetBitReader();
             packet.ReadBit("IsBoostSpell", idx);
@@ -282,36 +282,35 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
 
         public static QuestOfferReward ReadQuestGiverOfferRewardData441(Packet packet, params object[] indexes)
         {
-            ReadQuestRewards441(packet, "QuestRewards");
-            var emotesCount = packet.ReadUInt32("EmotesCount");
-            var questgiverGUID = packet.ReadPackedGuid128("QuestGiverGUID");
-            packet.ReadInt32E<QuestFlags>("Flags");
-            packet.ReadInt32E<QuestFlagsEx>("FlagsEx");
-            packet.ReadInt32E<QuestFlagsEx2>("FlagsEx2_Unused440"); // Probably uninitialized random values atm
-            packet.ReadInt32("QuestGiverCreatureID");
-            int id = packet.ReadInt32<QuestId>("QuestID");
+            ReadQuestRewards441(packet, indexes, "QuestRewards");
+            var emotesCount = packet.ReadUInt32("EmotesCount", indexes);
+            var questgiverGUID = packet.ReadPackedGuid128("QuestGiverGUID", indexes);
+            packet.ReadInt32E<QuestFlags>("Flags", indexes);
+            packet.ReadInt32E<QuestFlagsEx>("FlagsEx", indexes);
+            packet.ReadInt32E<QuestFlagsEx2>("FlagsEx2_Unused440", indexes); // Probably uninitialized random values atm
+            packet.ReadInt32("QuestGiverCreatureID", indexes);
+            int id = packet.ReadInt32<QuestId>("QuestID", indexes);
 
             QuestOfferReward questOfferReward = new QuestOfferReward
             {
                 ID = (uint)id
             };
 
-            packet.ReadInt32("SuggestedPartyMembers");
-            packet.ReadInt32E<QuestInfo>("QuestInfoID");
+            packet.ReadInt32("SuggestedPartyMembers", indexes);
+            packet.ReadInt32E<QuestInfo>("QuestInfoID", indexes);
             // QuestDescEmote
             questOfferReward.Emote = new int?[] { 0, 0, 0, 0 };
             questOfferReward.EmoteDelay = new uint?[] { 0, 0, 0, 0 };
             for (var i = 0; i < emotesCount; i++)
             {
-                questOfferReward.Emote[i] = packet.ReadInt32("Type");
-                questOfferReward.EmoteDelay[i] = packet.ReadUInt32("Delay");
+                questOfferReward.Emote[i] = packet.ReadInt32("Type", i, indexes);
+                questOfferReward.EmoteDelay[i] = packet.ReadUInt32("Delay", i, indexes);
             }
 
             packet.ResetBitReader();
-
-            packet.ReadBit("AutoLaunched");
-            packet.ReadBit("Unused");
-            packet.ReadBit("ResetByScheduler");
+            packet.ReadBit("AutoLaunched", indexes);
+            packet.ReadBit("Unused", indexes);
+            packet.ReadBit("ResetByScheduler", indexes);
 
             CoreParsers.QuestHandler.AddQuestEnder(questgiverGUID, (uint)id);
 
@@ -517,6 +516,9 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             uint questTurnTextWindowLen = packet.ReadBits(10);
             uint questTurnTargetNameLen = packet.ReadBits(8);
             uint questCompletionLogLen = packet.ReadBits(11);
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                packet.ReadBit("ResetByScheduler");
 
             for (uint i = 0; i < objectiveCount; ++i)
             {
@@ -794,7 +796,7 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
         {
             QuestOfferReward questOfferReward;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
-                questOfferReward = ReadQuestGiverOfferRewardData441(packet, "QuestGiverOfferRewardData");
+                questOfferReward = ReadQuestGiverOfferRewardData441(packet);
             else
                 questOfferReward = ReadQuestGiverOfferRewardData(packet, "QuestGiverOfferRewardData");
 
@@ -889,6 +891,10 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             var descEmotesCount = packet.ReadUInt32("DescEmotesCount");
             var objectivesCount = packet.ReadUInt32("ObjectivesCount");
             packet.ReadInt32("QuestStartItemID");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                packet.ReadInt32("QuestInfoID");
+
             packet.ReadInt32("QuestSessionBonus");
             packet.ReadInt32("QuestGiverCreatureID");
             var conditionalDescriptionTextCount = packet.ReadUInt32();
@@ -906,10 +912,20 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
 
             for (var i = 0; i < objectivesCount; i++)
             {
-                packet.ReadInt32("ObjectiveID", i);
-                packet.ReadInt32("ObjectID", i);
-                packet.ReadInt32("Amount", i);
-                packet.ReadByte("Type", i);
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                {
+                    packet.ReadInt32("ObjectiveID", i);
+                    packet.ReadInt32("Type", i);
+                    packet.ReadInt32("ObjectID", i);
+                    packet.ReadInt32("Amount", i);
+                }
+                else
+                {
+                    packet.ReadInt32("ObjectiveID", i);
+                    packet.ReadInt32("ObjectID", i);
+                    packet.ReadInt32("Amount", i);
+                    packet.ReadByte("Type", i);
+                }
             }
 
             packet.ResetBitReader();
@@ -923,11 +939,22 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             uint portraitTurnInNameLen = packet.ReadBits(8);
 
             packet.ReadBit("AutoLaunched");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                packet.ReadBit("FromContentPush");
+
             packet.ReadBit("Unused");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                packet.ReadBit("ResetByScheduler");
+
             packet.ReadBit("StartCheat");
             packet.ReadBit("DisplayPopup");
 
-            ReadQuestRewards(packet, "QuestRewards");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_4_1_57294))
+                ReadQuestRewards441(packet, "QuestRewards");
+            else
+                ReadQuestRewards(packet, "QuestRewards");
 
             packet.ReadWoWString("QuestTitle", questTitleLen);
             packet.ReadWoWString("DescriptionText", descriptionTextLen);
@@ -996,7 +1023,7 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             }
         }
 
-        [Parser(Opcode.SMSG_QUEST_GIVER_REQUEST_ITEMS)]
+        [Parser(Opcode.SMSG_QUEST_GIVER_REQUEST_ITEMS, ClientVersionBuild.V4_4_0_54481, ClientVersionBuild.V4_4_1_57294)]
         public static void HandleQuestGiverRequestItems(Packet packet)
         {
             var requestItems = packet.Holder.QuestGiverRequestItems = new();
@@ -1057,6 +1084,96 @@ namespace WowPacketParserModule.V4_4_0_54481.Parsers
             packet.ResetBitReader();
 
             requestItems.AutoLaunched = packet.ReadBit("AutoLaunched");
+
+            packet.ResetBitReader();
+            packet.ReadInt32("QuestGiverCreatureID"); // questgiver entry?
+            var conditionalCompletionTextCount = packet.ReadUInt32();
+            var questTitleLen = packet.ReadBits(9);
+            var completionTextLen = packet.ReadBits(12);
+
+            for (int i = 0; i < conditionalCompletionTextCount; i++)
+                ReadConditionalQuestText(packet, id, i, ConditionalTextType.RequestItems, i, "ConditionalCompletionText");
+
+            requestItems.QuestTitle = packet.ReadWoWString("QuestTitle", questTitleLen);
+            string completionText = requestItems.CompletionText = packet.ReadWoWString("CompletionText", completionTextLen);
+
+            CoreParsers.QuestHandler.QuestRequestItemHelper(id, completionText, delay, emote, isComplete, packet, noRequestOnComplete);
+
+            if (ClientLocale.PacketLocale != LocaleConstant.enUS && completionText != string.Empty)
+            {
+                QuestRequestItemsLocale localesQuestRequestItems = new QuestRequestItemsLocale
+                {
+                    ID = (uint)id,
+                    CompletionText = completionText
+                };
+                Storage.LocalesQuestRequestItems.Add(localesQuestRequestItems, packet.TimeSpan);
+            }
+        }
+
+        [Parser(Opcode.SMSG_QUEST_GIVER_REQUEST_ITEMS, ClientVersionBuild.V4_4_1_57294)]
+        public static void HandleQuestGiverRequestItems441(Packet packet)
+        {
+            var requestItems = packet.Holder.QuestGiverRequestItems = new();
+            var collectCount = requestItems.CollectCount = packet.ReadUInt32("CollectCount");
+            var currencyCount = requestItems.CurrencyCount = packet.ReadUInt32("CurrencyCount");
+            var questgiverGUID = packet.ReadPackedGuid128("QuestGiverGUID");
+            requestItems.QuestGiver = questgiverGUID;
+
+            for (int i = 0; i < 3; i++)
+            {
+                var flags = packet.ReadInt32("QuestFlags", i);
+                if (i == 0)
+                    requestItems.QuestFlags = (uint)flags;
+                else if (i == 1)
+                    requestItems.QuestFlags2 = (uint)flags;
+            }
+
+            QuestStatusFlags statusFlags = packet.ReadInt32E<QuestStatusFlags>("StatusFlags");
+            requestItems.StatusFlags = (PacketQuestStatusFlags)statusFlags;
+            bool isComplete = (statusFlags & (QuestStatusFlags.Complete)) == QuestStatusFlags.Complete;
+            bool noRequestOnComplete = (statusFlags & QuestStatusFlags.NoRequestOnComplete) != 0;
+
+            requestItems.QuestGiverEntry = (uint)packet.ReadInt32("QuestGiverCreatureID");
+
+            int id = packet.ReadInt32<QuestId>("QuestID");
+            int delay = requestItems.EmoteDelay = packet.ReadInt32("EmoteDelay");
+            int emote = requestItems.EmoteType = packet.ReadInt32("EmoteType");
+            requestItems.QuestId = (uint)id;
+
+            CoreParsers.QuestHandler.AddQuestEnder(questgiverGUID, (uint)id);
+
+            requestItems.SuggestedPartyMembers = packet.ReadInt32("SuggestPartyMembers");
+            requestItems.MoneyToGet = packet.ReadInt32("MoneyToGet");
+            packet.ReadInt32("QuestInfoID");
+
+            for (int i = 0; i < collectCount; i++)
+            {
+                var objectId = packet.ReadInt32("ObjectID", i);
+                var amount = packet.ReadInt32("Amount", i);
+                var flags = packet.ReadUInt32("Flags", i);
+                requestItems.Collect.Add(new QuestCollect()
+                {
+                    Id = objectId,
+                    Count = amount,
+                    Flags = flags
+                });
+            }
+
+            for (int i = 0; i < currencyCount; i++)
+            {
+                var currencyId = packet.ReadInt32("CurrencyID", i);
+                var amount = packet.ReadInt32("Amount", i);
+                requestItems.Currencies.Add(new Currency()
+                {
+                    Id = (uint)currencyId,
+                    Count = (uint)amount
+                });
+            }
+
+            packet.ResetBitReader();
+
+            requestItems.AutoLaunched = packet.ReadBit("AutoLaunched");
+            packet.ReadBit("ResetByScheduler");
 
             packet.ResetBitReader();
             packet.ReadInt32("QuestGiverCreatureID"); // questgiver entry?
