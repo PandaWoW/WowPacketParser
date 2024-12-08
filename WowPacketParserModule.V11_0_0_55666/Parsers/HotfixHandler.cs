@@ -1699,6 +1699,16 @@ namespace WowPacketParserModule.V11_0_0_55666.Parsers
             }
         }
 
+        public static void CreatureLabelHandler1100(Packet packet, uint entry, params object[] indexes)
+        {
+            CreatureLabelHotfix1100 hotfix = new CreatureLabelHotfix1100();
+
+            hotfix.ID = entry;
+            hotfix.LabelID = packet.ReadInt32("LabelID", indexes);
+            hotfix.CreatureDifficultyID = packet.ReadUInt32("CreatureDifficultyID", indexes);
+            Storage.CreatureLabelHotfixes1100.Add(hotfix, packet.TimeSpan);
+        }
+
         public static void CreatureModelDataHandler1100(Packet packet, uint entry, params object[] indexes)
         {
             CreatureModelDataHotfix1100 hotfix = new CreatureModelDataHotfix1100();
@@ -2348,6 +2358,16 @@ namespace WowPacketParserModule.V11_0_0_55666.Parsers
             hotfix.ClientItemID = packet.ReadInt32("ClientItemID", indexes);
             hotfix.Unknown1100 = packet.ReadUInt16("Unknown1100", indexes);
             Storage.GameobjectDisplayInfoHotfixes1100.Add(hotfix, packet.TimeSpan);
+        }
+
+        public static void GameobjectLabelHandler1100(Packet packet, uint entry, params object[] indexes)
+        {
+            GameobjectLabelHotfix1100 hotfix = new GameobjectLabelHotfix1100();
+
+            hotfix.ID = entry;
+            hotfix.LabelID = packet.ReadInt32("LabelID", indexes);
+            hotfix.GameObjectID = packet.ReadUInt32("GameObjectID", indexes);
+            Storage.GameobjectLabelHotfixes1100.Add(hotfix, packet.TimeSpan);
         }
 
         public static void GameobjectsHandler1100(Packet packet, uint entry, params object[] indexes)
@@ -4391,6 +4411,19 @@ namespace WowPacketParserModule.V11_0_0_55666.Parsers
             hotfix.FlightCapabilityID = packet.ReadInt32("FlightCapabilityID", indexes);
 
             Storage.MountCapabilityHotfixes1100.Add(hotfix, packet.TimeSpan);
+        }
+
+        public static void MountEquipmentHandler1100(Packet packet, uint entry, params object[] indexes)
+        {
+            MountEquipmentHotfix1100 hotfix = new MountEquipmentHotfix1100();
+
+            hotfix.ID = entry;
+            hotfix.Item = packet.ReadInt32("Item", indexes);
+            hotfix.BuffSpell = packet.ReadInt32("BuffSpell", indexes);
+            hotfix.Unknown820 = packet.ReadInt32("Unknown820", indexes);
+            hotfix.LearnedBySpell = packet.ReadUInt32("LearnedBySpell", indexes);
+
+            Storage.MountEquipmentHotfixes1100.Add(hotfix, packet.TimeSpan);
         }
 
         public static void MountTypeXCapabilityHandler1100(Packet packet, uint entry, params object[] indexes)
@@ -7841,6 +7874,11 @@ namespace WowPacketParserModule.V11_0_0_55666.Parsers
                                 CreatureFamilyHandler1100(db2File, (uint)entry, count);
                                 break;
                             }
+                            case DB2Hash.CreatureLabel:
+                            {
+                                CreatureLabelHandler1100(db2File, (uint)entry, count);
+                                break;
+                            }
                             case DB2Hash.CreatureModelData:
                             {
                                 CreatureModelDataHandler1100(db2File, (uint)entry, count);
@@ -7970,6 +8008,11 @@ namespace WowPacketParserModule.V11_0_0_55666.Parsers
                             case DB2Hash.GameobjectDisplayInfo:
                             {
                                 GameobjectDisplayInfoHandler1100(db2File, (uint)entry, count);
+                                break;
+                            }
+                            case DB2Hash.GameobjectLabel:
+                            {
+                                GameobjectLabelHandler1100(db2File, (uint)entry, count);
                                 break;
                             }
                             case DB2Hash.Gameobjects:
@@ -8445,6 +8488,11 @@ namespace WowPacketParserModule.V11_0_0_55666.Parsers
                             case DB2Hash.MountCapability:
                             {
                                 MountCapabilityHandler1100(db2File, (uint)entry, count);
+                                break;
+                            }
+                            case DB2Hash.MountEquipment:
+                            {
+                                MountEquipmentHandler1100(db2File, (uint)entry, count);
                                 break;
                             }
                             case DB2Hash.MountTypeXCapability:

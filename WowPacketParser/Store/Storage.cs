@@ -633,6 +633,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<CreatureDisplayInfoHotfix1100> CreatureDisplayInfoHotfixes1100 = new DataBag<CreatureDisplayInfoHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<CreatureDisplayInfoExtraHotfix1100> CreatureDisplayInfoExtraHotfixes1100 = new DataBag<CreatureDisplayInfoExtraHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<CreatureFamilyHotfix1100> CreatureFamilyHotfixes1100 = new DataBag<CreatureFamilyHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
+        public static readonly DataBag<CreatureLabelHotfix1100> CreatureLabelHotfixes1100 = new DataBag<CreatureLabelHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<CreatureModelDataHotfix1100> CreatureModelDataHotfixes1100 = new DataBag<CreatureModelDataHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<CreatureTypeHotfix1100> CreatureTypeHotfixes1100 = new DataBag<CreatureTypeHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<CriteriaHotfix1100> CriteriaHotfixes1100 = new DataBag<CriteriaHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
@@ -660,6 +661,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<FriendshipReputationHotfix1100> FriendshipReputationHotfixes1100 = new DataBag<FriendshipReputationHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<GameobjectArtKitHotfix1100> GameobjectArtKitHotfixes1100 = new DataBag<GameobjectArtKitHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<GameobjectDisplayInfoHotfix1100> GameobjectDisplayInfoHotfixes1100 = new DataBag<GameobjectDisplayInfoHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
+        public static readonly DataBag<GameobjectLabelHotfix1100> GameobjectLabelHotfixes1100 = new DataBag<GameobjectLabelHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<GameobjectsHotfix1100> GameobjectsHotfixes1100 = new DataBag<GameobjectsHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<GarrAbilityHotfix1100> GarrAbilityHotfixes1100 = new DataBag<GarrAbilityHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<GarrBuildingHotfix1100> GarrBuildingHotfixes1100 = new DataBag<GarrBuildingHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
@@ -757,6 +759,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<ModifierTreeHotfix1100> ModifierTreeHotfixes1100 = new DataBag<ModifierTreeHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<MountHotfix1100> MountHotfixes1100 = new DataBag<MountHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<MountCapabilityHotfix1100> MountCapabilityHotfixes1100 = new DataBag<MountCapabilityHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
+        public static readonly DataBag<MountEquipmentHotfix1100> MountEquipmentHotfixes1100 = new DataBag<MountEquipmentHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<MountTypeXCapabilityHotfix1100> MountTypeXCapabilityHotfixes1100 = new DataBag<MountTypeXCapabilityHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<MountXDisplayHotfix1100> MountXDisplayHotfixes1100 = new DataBag<MountXDisplayHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
         public static readonly DataBag<MovieHotfix1100> MovieHotfixes1100 = new DataBag<MovieHotfix1100>(new List<SQLOutput> { SQLOutput.hotfixes });
@@ -2612,6 +2615,7 @@ namespace WowPacketParser.Store
             CreatureDisplayInfoHotfixes1100.Clear();
             CreatureDisplayInfoExtraHotfixes1100.Clear();
             CreatureFamilyHotfixes1100.Clear();
+            CreatureLabelHotfixes1100.Clear();
             CreatureModelDataHotfixes1100.Clear();
             CreatureTypeHotfixes1100.Clear();
             CriteriaHotfixes1100.Clear();
@@ -2639,6 +2643,7 @@ namespace WowPacketParser.Store
             FriendshipReputationHotfixes1100.Clear();
             GameobjectArtKitHotfixes1100.Clear();
             GameobjectDisplayInfoHotfixes1100.Clear();
+            GameobjectLabelHotfixes1100.Clear();
             GameobjectsHotfixes1100.Clear();
             GarrAbilityHotfixes1100.Clear();
             GarrBuildingHotfixes1100.Clear();
@@ -2735,6 +2740,7 @@ namespace WowPacketParser.Store
             MawPowerHotfixes1100.Clear();
             ModifierTreeHotfixes1100.Clear();
             MountHotfixes1100.Clear();
+            MountEquipmentHotfixes1100.Clear();
             MountCapabilityHotfixes1100.Clear();
             MountTypeXCapabilityHotfixes1100.Clear();
             MountXDisplayHotfixes1100.Clear();

@@ -917,6 +917,8 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.V11_0_5_57292:
                 case ClientVersionBuild.V11_0_5_57388:
                 case ClientVersionBuild.V11_0_5_57534:
+                case ClientVersionBuild.V11_0_5_57637:
+                case ClientVersionBuild.V11_0_5_57689:
                 {
                     return "V11_0_5_57171";
                 }
@@ -1134,6 +1136,7 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.V3_4_0_45572:
                 case ClientVersionBuild.V3_4_0_45613:
                 case ClientVersionBuild.V3_4_0_45704:
+                case ClientVersionBuild.V3_4_0_45770:
                 case ClientVersionBuild.V3_4_0_45772:
                 case ClientVersionBuild.V3_4_0_45854:
                 case ClientVersionBuild.V3_4_0_45942:
@@ -1215,6 +1218,7 @@ namespace WowPacketParser.Enums.Version
                 }
                 case ClientVersionBuild.V4_4_1_57359: // Blizzard changed ActivePlayer in second 4.4.1 build
                 case ClientVersionBuild.V4_4_1_57564:
+                case ClientVersionBuild.V4_4_1_57916:
                 {
                     return "V4_4_1_57359";
                 }
