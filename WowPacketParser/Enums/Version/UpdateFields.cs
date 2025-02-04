@@ -931,6 +931,8 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.V11_0_7_58630:
                 case ClientVersionBuild.V11_0_7_58680:
                 case ClientVersionBuild.V11_0_7_58773:
+                case ClientVersionBuild.V11_0_7_58867:
+                case ClientVersionBuild.V11_0_7_58911:
                 {
                     return "V11_0_7_58123";
                 }
@@ -1090,6 +1092,12 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.V1_15_5_58555:
                 {
                     return "V1_15_5_57638";
+                }
+                case ClientVersionBuild.V1_15_6_58797:
+                case ClientVersionBuild.V1_15_6_58844:
+                case ClientVersionBuild.V1_15_6_58866:
+                {
+                    return "V1_15_6_58797";
                 }
                 case ClientVersionBuild.V2_5_1_38598:
                 case ClientVersionBuild.V2_5_1_38644:
